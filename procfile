@@ -1,1 +1,1 @@
-web: gunicorn dailyecommerce.wsgi
+web: gunicorn dailyecommerce.uwsgi

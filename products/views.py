@@ -2,6 +2,7 @@ from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
     RetrieveAPIView,
+    RetrieveUpdateAPIView,
     UpdateAPIView,
     DestroyAPIView
     )
@@ -29,21 +30,21 @@ class ProductDetailAPIView(RetrieveAPIView):
     # lookup_url_kwarg = "abc"
 
 
-class ProductUpdateAPIView(UpdateAPIView):
+class ProductUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
 
-    def patch(self, request, *args, **kwargs):
-        print("result", kwargs)
-        try:
-            products = Product.objects.get(pk=kwargs['pk'])
-        except Exception as e:
-            print(e)
-        serializer = ProductDetailSerializer(products, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_204_NO_CONTENT)
+    # def patch(self, request, *args, **kwargs):
+    #     print("results", kwargs)
+    #     try:
+    #         products = Product.objects.get(pk=kwargs['pk'])
+    #     except Exception as e:
+    #         print(e)
+    #     serializer = ProductDetailSerializer(products, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_204_NO_CONTENT)
 
     
     # def get_serializer(self, *args, **kwargs):

@@ -25,7 +25,7 @@ SECRET_KEY = 'ty@*&-yvu759_b9n6(%_ozn_#jb-wn)f$ggp79@a@6o72zstqc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com']
 
 
 # Application definition

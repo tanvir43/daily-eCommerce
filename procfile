@@ -1,1 +1,1 @@
-web: gunicorn dailyecommerce.wsgi --log-file -
+web: gunicorn dailyecommerce.wsgi

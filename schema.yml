@@ -1,0 +1,13 @@
+info:
+  description: ''
+  title: ''
+  version: ''
+openapi: 3.0.0
+paths:
+  /api-documentation:
+    get:
+      operationId: api-documentation_list
+      tags:
+      - api-documentation
+servers:
+- url: ''

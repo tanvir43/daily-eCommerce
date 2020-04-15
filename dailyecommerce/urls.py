@@ -25,7 +25,7 @@ from django.views.decorators.csrf import csrf_exempt
 schema_view = get_swagger_view(title="dailyecommerce api's")
 
 urlpatterns = [
-    path(r'^$', schema_view),
+    path('api-documentation', schema_view),
     path('admin/', admin.site.urls),
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
     path('api/products/', include('products.urls')),

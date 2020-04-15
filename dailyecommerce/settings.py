@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'mptt',
     'rest_framework',
     'whitenoise.runserver_nostatic',
+    'rest_framework_swagger',
 
     #Internal App
     'products',

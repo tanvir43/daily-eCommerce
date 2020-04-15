@@ -17,10 +17,15 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls import url
 
+from rest_framework_swagger.views import get_swagger_view
+
 from django.views.decorators.csrf import csrf_exempt
 # from graphene_django.views import GraphQLView
 
+schema_view = get_swagger_view(title="dailyecommerce api's")
+
 urlpatterns = [
+    path(r'^$', schema_view),
     path('admin/', admin.site.urls),
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
     path('api/products/', include('products.urls')),

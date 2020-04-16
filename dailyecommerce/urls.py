@@ -17,18 +17,18 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls import url
 
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework_swagger.views import get_swagger_view
 
 from django.views.decorators.csrf import csrf_exempt
 # from graphene_django.views import GraphQLView
 
-schema_view = get_swagger_view(title="dailyecommerce api's")
+# schema_view = get_swagger_view(title="dailyecommerce api's")
 
 urlpatterns = [
-    path('api-documentation', schema_view),
+    # path('api-documentation', schema_view),
     path('admin/', admin.site.urls),
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
-    path('api/products/', include('products.urls')),
+    path('api/', include('products.urls')),
     # path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     url(r'^api-auth/', include('rest_framework.urls'))
 ]

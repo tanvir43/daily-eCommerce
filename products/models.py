@@ -3,20 +3,34 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
 
-class Category(MPTTModel, models.Model):
+class DateTimeModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class CategoryManager(models.Model):
+    def all(self):
+        qs = super(CategoryManager, self).filter(parent=None)
+        return qs
+
+
+class Category(DateTimeModel):
     name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=255, unique=True)
     description = models.TextField(blank=True)
     # description_json = JSONField(blank=True, default=dict)
-    parent = TreeForeignKey(
+    parent = models.ForeignKey(
         "self", null=True, blank=True, related_name="children", on_delete=models.CASCADE
     )
     background_image = models.ImageField(
         upload_to="category-backgrounds", blank=True, null=True
     )
     background_image_alt = models.CharField(max_length=128, blank=True)
-    objects = models.Manager()
-    tree = TreeManager()
+    objects = CategoryManager
+    # tree = TreeManager()
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
@@ -25,6 +39,15 @@ class Category(MPTTModel, models.Model):
     def __str__(self):
         return self.name
 
+    def children(self):
+        return Category.objects.filter(parent=self)
+
+    @property
+    def is_parent(self):
+        if self.parent is not None:
+            return False
+        return True
+
 
 class Unit(models.Model):
     name = models.CharField(max_length=30)
@@ -32,8 +55,8 @@ class Unit(models.Model):
     def __str__(self):
         return self.name
 
-#SeoModel, ModelWithMetadata, PublishableModel
-class Product(models.Model):
+
+class Product(DateTimeModel):
     # product_type = models.ForeignKey(
     #     ProductType, related_name="products", on_delete=models.CASCADE
     # )
@@ -70,10 +93,10 @@ class Product(models.Model):
     # )
     available = models.BooleanField(default=True)
     stock = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="product", blank=True, null=True)
     image_alt = models.CharField(max_length=128, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+    # updated_at = models.DateTimeField(auto_now=True, null=True)
     charge_taxes = models.BooleanField(default=True)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     # weight = MeasurementField(
@@ -83,7 +106,7 @@ class Product(models.Model):
     # translated = TranslationProxy()
 
     class Meta:
-        # app_label = "products"
+        app_label = "products"
         ordering = ("name",)
         # permissions = (
         #     (ProductPermissions.MANAGE_PRODUCTS.codename, "Manage products."),

@@ -9,8 +9,27 @@ from rest_framework.generics import (
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from products.models import Product
-from products.serializers import ProductListSerializer, ProductDetailSerializer, CategorySerializer
+
+from products.models import Category, Product
+from products.serializers import (
+    ProductListSerializer,
+    ProductDetailSerializer,
+    CategoryListSerializer,
+    CategoryChildSerializer,
+    CategoryDetailSerializer,
+    )
+
+
+class CategoryDetailAPIView(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
+    # lookup_field = "slug"
+    # lookup_url_kwarg = "abc"
+
+
+class CategoryListAPIView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
 
 
 class ProductCreateAPIView(CreateAPIView):

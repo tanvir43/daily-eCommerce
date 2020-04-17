@@ -36,6 +36,9 @@ class Category(DateTimeModel):
     #     super().__init__(*args, **kwargs)
         # self.children = None
 
+    class Meta:
+        app_label = "products"
+
     def __str__(self):
         return self.name
 

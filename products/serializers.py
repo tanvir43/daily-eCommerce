@@ -1,12 +1,79 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework import serializers
+from rest_framework.serializers import (
+    ModelSerializer,
+    SerializerMethodField,
+    HyperlinkedIdentityField,
+    )
 
 from .models import Category, Product
+
+
+class RecursiveSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
 
 
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = [
+            'slug',
+            'description',
+            'parent',
+            'background_image',
+            'background_image_alt'
+        ]
+
+
+class CategoryListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name='category-detail')
+
+    class Meta:
+        model = Category
+        fields = [
+            'url',
+            'slug',
+            'description',
+            'parent',
+            'background_image',
+            'background_image_alt'
+        ]
+
+
+class CategoryChildSerializer(ModelSerializer):
+    children = RecursiveSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = [
+            'id',
+            'slug',
+            'description',
+            'parent',
+            'background_image',
+            'background_image_alt',
+            'children',
+        ]
+
+
+class CategoryDetailSerializer(ModelSerializer):
+    sub_category = SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = [
+            'slug',
+            'description',
+            'background_image',
+            'background_image_alt',
+            'sub_category'
+        ]
+
+    def get_sub_category(self, obj):
+        if obj.is_parent:
+            return CategoryChildSerializer(obj.children, many=True).data
+        return None
 
 
 class ProductListSerializer(ModelSerializer):

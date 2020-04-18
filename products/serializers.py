@@ -42,7 +42,7 @@ class CategoryListSerializer(ModelSerializer):
 
 
 class CategoryChildSerializer(ModelSerializer):
-    children = RecursiveSerializer(many=True, read_only=True)
+    sub_category = RecursiveSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
@@ -53,7 +53,7 @@ class CategoryChildSerializer(ModelSerializer):
             'parent',
             'background_image',
             'background_image_alt',
-            'children',
+            'sub_category',
         ]
 
 
@@ -72,7 +72,7 @@ class CategoryDetailSerializer(ModelSerializer):
 
     def get_sub_category(self, obj):
         if obj.is_parent:
-            return CategoryChildSerializer(obj.children, many=True).data
+            return CategoryChildSerializer(obj.sub_category, many=True).data
         return None
 
 

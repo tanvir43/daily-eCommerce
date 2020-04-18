@@ -23,7 +23,7 @@ class Category(DateTimeModel):
     description = models.TextField(blank=True)
     # description_json = JSONField(blank=True, default=dict)
     parent = models.ForeignKey(
-        "self", null=True, blank=True, related_name="children", on_delete=models.CASCADE
+        "self", null=True, blank=True, related_name="sub_category", on_delete=models.CASCADE
     )
     background_image = models.ImageField(
         upload_to="category-backgrounds", blank=True, null=True
@@ -42,7 +42,7 @@ class Category(DateTimeModel):
     def __str__(self):
         return self.name
 
-    def children(self):
+    def sub_category(self):
         return Category.objects.filter(parent=self)
 
     @property

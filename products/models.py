@@ -102,6 +102,7 @@ class Product(DateTimeModel):
     # updated_at = models.DateTimeField(auto_now=True, null=True)
     charge_taxes = models.BooleanField(default=True)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
+    quantity = models.FloatField()
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )

@@ -26,7 +26,7 @@ SECRET_KEY = 'ty@*&-yvu759_b9n6(%_ozn_#jb-wn)f$ggp79@a@6o72zstqc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com']
+ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','localhost']
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'whitenoise.runserver_nostatic',
     'rest_framework_swagger',
+    'corsheaders',
 
     #Internal App
     'products',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -159,5 +161,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 
 }
+
+CORS_ORIGIN_WHITELIST = [
+    "https://dailyecommerce.herokuapp.com",
+    "http://127.0.0.1:8000"
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r"^https://\w+\.dailyecommerce.herokuapp\.com$",
+    'http://localhost:8000',
+]

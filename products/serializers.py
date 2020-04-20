@@ -23,6 +23,7 @@ class CategorySerializer(ModelSerializer):
             'name',
             'slug',
             'description',
+            'parent',
             'background_image',
             'background_image_alt',
             'category'

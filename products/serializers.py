@@ -15,15 +15,23 @@ class RecursiveSerializer(serializers.Serializer):
 
 
 class CategorySerializer(ModelSerializer):
+    category = SerializerMethodField()
+
     class Meta:
         model = Category
         fields = [
+            'name',
             'slug',
             'description',
-            'parent',
             'background_image',
-            'background_image_alt'
+            'background_image_alt',
+            'category'
         ]
+
+    def get_category(self, obj):
+        if not obj.is_parent:
+            return obj.parent.name
+        return None
 
 
 class CategoryListSerializer(ModelSerializer):
@@ -33,6 +41,7 @@ class CategoryListSerializer(ModelSerializer):
         model = Category
         fields = [
             'url',
+            'name',
             'slug',
             'description',
             'parent',
@@ -48,6 +57,7 @@ class CategoryChildSerializer(ModelSerializer):
         model = Category
         fields = [
             'id',
+            'name',
             'slug',
             'description',
             'parent',
@@ -63,6 +73,7 @@ class CategoryDetailSerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = [
+            'name',
             'slug',
             'description',
             'background_image',

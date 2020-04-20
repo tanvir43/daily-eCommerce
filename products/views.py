@@ -14,10 +14,16 @@ from products.models import Category, Product
 from products.serializers import (
     ProductListSerializer,
     ProductDetailSerializer,
+    CategorySerializer,
     CategoryListSerializer,
     CategoryChildSerializer,
     CategoryDetailSerializer,
     )
+
+
+class CategoryCreateAPIView(CreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 
 class CategoryDetailAPIView(RetrieveAPIView):

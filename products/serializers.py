@@ -37,6 +37,7 @@ class CategorySerializer(ModelSerializer):
 
 class CategoryListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(view_name='category-detail')
+    sub_category = RecursiveSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
@@ -47,7 +48,8 @@ class CategoryListSerializer(ModelSerializer):
             'description',
             'parent',
             'background_image',
-            'background_image_alt'
+            'background_image_alt',
+            'sub_category'
         ]
 
 

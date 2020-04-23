@@ -11,7 +11,7 @@ class DateTimeModel(models.Model):
         abstract = True
 
 
-class CategoryManager(models.Model):
+class CategoryManager(models.Manager):
     def all(self):
         qs = super(CategoryManager, self).filter(parent=None)
         return qs

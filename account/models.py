@@ -1,10 +1,43 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.forms.models import model_to_dict
 
 from django_countries.fields import Country, CountryField
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 
-# Create your models here.
+
+class RoleName(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Role(models.Model):
+    SUPER_ADMIN = 1
+    SALES_STAFF = 2
+    SALES_MANAGER = 3
+    STORE_OWNER = 4
+    STORE_ADMIN = 5
+    ROLE_CHOICES = (
+        (SUPER_ADMIN, 'super_admin'),
+        (SALES_STAFF, 'sales_staff'),
+        (SALES_MANAGER, 'sales_manager'),
+        (STORE_OWNER, 'store_owner'),
+        (STORE_ADMIN, 'store_admin'),
+    )
+
+    # id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
+    name = models.ForeignKey(RoleName, related_name='roles', on_delete=models.CASCADE)
+
+    def __str__(self):
+        # return self.get_id_display()
+        return self.name.name
+
+
+class User(AbstractUser):
+    phone = PhoneNumberField(blank=True, default="")
+    roles = models.ManyToManyField(Role)
 
 
 class Address(models.Model):

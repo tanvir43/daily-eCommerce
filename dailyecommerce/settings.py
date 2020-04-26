@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     #Internal App
+    'account',
     'products',
     'inventory'
 
@@ -66,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTH_USER_MODEL = 'account.User'
 
 ROOT_URLCONF = 'dailyecommerce.urls'
 

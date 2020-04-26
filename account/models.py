@@ -6,11 +6,11 @@ from django_countries.fields import Country, CountryField
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 
 
-class RoleName(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
+# class RoleName(models.Model):
+#     name = models.CharField(max_length=100)
+#
+#     def __str__(self):
+#         return self.name
 
 
 class Role(models.Model):
@@ -28,11 +28,11 @@ class Role(models.Model):
     )
 
     # id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
-    name = models.ForeignKey(RoleName, related_name='roles', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         # return self.get_id_display()
-        return self.name.name
+        return self.name
 
 
 class User(AbstractUser):

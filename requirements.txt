@@ -15,6 +15,7 @@ django-mptt==0.11.0
 django-phonenumber-field==4.0.0
 django-rest-swagger==2.2.0
 djangorestframework==3.11.0
+djangorestframework-simplejwt==4.4.0
 graphene==2.1.8
 graphene-django==2.8.2
 graphene-django-optimizer==0.6.2
@@ -31,6 +32,7 @@ phonenumberslite==8.12.2
 Pillow==7.0.0
 promise==2.3
 psycopg2==2.8.4
+PyJWT==1.7.1
 pytz==2019.3
 PyYAML==5.3.1
 requests==2.23.0

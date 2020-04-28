@@ -1,5 +1,6 @@
+import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser
+from django.contrib.auth.models import AbstractUser, AbstractBaseUser, Group
 from django.forms.models import model_to_dict
 
 from django_countries.fields import Country, CountryField
@@ -11,6 +12,17 @@ from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 #
 #     def __str__(self):
 #         return self.name
+
+class User(AbstractUser):
+    groups = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True
+        )
+
+    def __str__(self):
+        return self.get_full_name()
 
 
 class Role(models.Model):
@@ -29,15 +41,45 @@ class Role(models.Model):
 
     # id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
     name = models.CharField(max_length=100)
+    user = models.ManyToManyField(User)
 
     def __str__(self):
         # return self.get_id_display()
         return self.name
 
 
-class User(AbstractUser):
-    phone = PhoneNumberField(blank=True, default="")
-    roles = models.ManyToManyField(Role)
+# class User(AbstractUser):
+#     groups = models.ForeignKey(Group, on_delete=models.CASCADE)
+#     roles = models.ManyToManyField(Role)
+#     email = models.EmailField(
+#         verbose_name='email address',
+#         max_length=255,
+#         unique=True
+#         )
+#
+#     def __str__(self):
+#         return self.get_full_name()
+
+
+class UserProfile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    first_name = models.CharField(max_length=50, unique=False)
+    last_name = models.CharField(max_length=50, unique=False)
+    phone_number = models.CharField(max_length=10, unique=True, null=False, blank=False)
+    # phone_number = PhoneNumberField(max_length=10, unique=True, null=False, blank=False)
+    age = models.PositiveIntegerField(null=True, blank=True)
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
+
+    class Meta:
+        '''
+        to set table name in database
+        '''
+        db_table = "profile"
 
 
 class Address(models.Model):

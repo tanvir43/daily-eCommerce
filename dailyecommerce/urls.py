@@ -29,6 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
     path('api/', include('products.urls')),
+    path('api/', include('account.urls')),
     # path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     url(r'^api-auth/', include('rest_framework.urls'))
 ]

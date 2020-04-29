@@ -13,17 +13,6 @@ from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 #     def __str__(self):
 #         return self.name
 
-class User(AbstractUser):
-    groups = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True
-        )
-
-    def __str__(self):
-        return self.get_full_name()
-
 
 class Role(models.Model):
     SUPER_ADMIN = 1
@@ -41,24 +30,28 @@ class Role(models.Model):
 
     # id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
     name = models.CharField(max_length=100)
-    user = models.ManyToManyField(User)
+    # user = models.ManyToManyField(User)
 
     def __str__(self):
         # return self.get_id_display()
         return self.name
 
 
-# class User(AbstractUser):
-#     groups = models.ForeignKey(Group, on_delete=models.CASCADE)
-#     roles = models.ManyToManyField(Role)
-#     email = models.EmailField(
-#         verbose_name='email address',
-#         max_length=255,
-#         unique=True
-#         )
-#
-#     def __str__(self):
-#         return self.get_full_name()
+class User(AbstractUser):
+    groups = models.ForeignKey(Group, null=True, blank=True, on_delete=models.CASCADE)
+    roles = models.ManyToManyField(Role, related_name='roles')
+    username = models.CharField(max_length=100, blank=True, null=True)
+    phone = PhoneNumberField()
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True
+        )
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
 
 
 class UserProfile(models.Model):

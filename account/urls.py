@@ -3,7 +3,7 @@ from django.urls import path
 from account import views
 
 urlpatterns = [
-        path('category/create', views.UserRegistrationAPIView.as_view(), name='user-create'),
+        path('user/create', views.UserRegistrationAPIView.as_view(), name='user-create'),
         # path('category/<str:slug>/detail', views.CategoryDetailAPIView.as_view(), name='category-detail'),
         # path('products/list', views.ProductListAPIView.as_view(), name='product-list'),
         # path('products/create', views.ProductCreateAPIView.as_view(), name='product-create'),

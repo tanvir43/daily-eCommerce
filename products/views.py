@@ -34,7 +34,7 @@ class CategoryDetailAPIView(RetrieveAPIView):
 
 
 class CategoryListAPIView(ListAPIView):
-    queryset = Category.objects.all()
+    queryset = Category.objects.filter(parent=None)
     serializer_class = CategoryListSerializer
 
 

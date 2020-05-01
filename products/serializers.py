@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
     HyperlinkedIdentityField,
+    PrimaryKeyRelatedField
     )
 
 from .models import Category, Product
@@ -10,6 +11,8 @@ from .models import Category, Product
 
 class RecursiveSerializer(serializers.Serializer):
     def to_representation(self, value):
+        print("Value", value)
+        print("__Class__", self.parent.parent.__class__(Category.objects.filter(parent=None)))
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
 
@@ -35,27 +38,6 @@ class CategorySerializer(ModelSerializer):
         return None
 
 
-class CategoryListSerializer(ModelSerializer):
-    url = HyperlinkedIdentityField(
-        view_name='category-detail',
-        lookup_field='slug'
-    )
-    sub_category = RecursiveSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Category
-        fields = [
-            'url',
-            'name',
-            'slug',
-            'description',
-            'parent',
-            'background_image',
-            'background_image_alt',
-            'sub_category'
-        ]
-
-
 class CategoryChildSerializer(ModelSerializer):
     sub_category = RecursiveSerializer(many=True, read_only=True)
 
@@ -71,6 +53,46 @@ class CategoryChildSerializer(ModelSerializer):
             'background_image_alt',
             'sub_category',
         ]
+
+
+class CategoryListSerializer(ModelSerializer):
+    # url = HyperlinkedIdentityField(
+    #     view_name='category-detail',
+    #     lookup_field='slug'
+    # )
+    # sub_category = SerializerMethodField()
+    # parent = PrimaryKeyRelatedField(queryset=Category.objects.filter(parent=None))
+    sub_category = RecursiveSerializer(many=True, read_only=True)
+
+    # def get_parent(self, instance):
+    #     print("instance", instance)
+    #     return CategoryChildSerializer(instance.sub_category.filter(parent__isnull=True), many=True).data
+
+    class Meta:
+        model = Category
+        fields = (
+            # 'url',
+            'name',
+            'slug',
+            'description',
+            'parent',
+            'background_image',
+            'background_image_alt',
+            'sub_category'
+        )
+
+    # sub_category = SerializerMethodField()
+    # sub_category = SubcategorySerializer(many=True, read_only=True)
+
+    # def get_sub_category(self, instance):
+    #     return CategoryChildSerializer(instance..filter(parent__isnull=True), many=True).data
+
+    # def get_sub_category(self, obj):
+    #     for obj in obj.objects.filter(obj_parent__isnull=True):
+    #         print(obj.name)
+    #         for child in obj.sub_category.all():
+    #             print(child.name)
+    #             return child.name
 
 
 class CategoryDetailSerializer(ModelSerializer):

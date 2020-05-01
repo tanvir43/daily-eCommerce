@@ -70,7 +70,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    groups = models.ForeignKey(Group, null=True, blank=True, on_delete=models.CASCADE)
+    # groups = models.ForeignKey(Group, null=True, blank=True, on_delete=models.CASCADE)
     roles = models.ManyToManyField(Role, related_name='roles')
     username = models.CharField(max_length=100, blank=True, null=True)
     # phone = PhoneNumberField()

@@ -72,6 +72,7 @@ class CategoryListSerializer(ModelSerializer):
         model = Category
         fields = (
             # 'url',
+            'id',
             'name',
             'slug',
             'description',

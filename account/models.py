@@ -74,7 +74,7 @@ class User(AbstractUser):
     # new_groups = models.ForeignKey(Group, related_name='new_groups', null=True, blank=True, on_delete=models.CASCADE)
     roles = models.ManyToManyField(Role, related_name='roles')
     username = models.CharField(max_length=100, blank=True, null=True)
-    # phone = PhoneNumberField()
+    phone = PhoneNumberField()
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -94,7 +94,7 @@ class UserProfile(models.Model):
     first_name = models.CharField(max_length=50, unique=False)
     last_name = models.CharField(max_length=50, unique=False)
     phone_number = models.CharField(max_length=10, unique=True, null=False, blank=False)
-    # phone_number = PhoneNumberField(max_length=10, unique=True, null=False, blank=False)
+    # phone = PhoneNumberField(max_length=10, unique=True, null=False, blank=False)
     age = models.PositiveIntegerField(null=True, blank=True)
     GENDER_CHOICES = (
         ('M', 'Male'),

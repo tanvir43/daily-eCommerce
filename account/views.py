@@ -20,3 +20,15 @@ class UserRegistrationAPIView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
 
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        status_code = status.HTTP_201_CREATED
+        response = {
+            'success': 'True',
+            'status_code': status_code,
+            'message': 'Successfully registered'
+        }
+        return Response(response, status=status_code)
+

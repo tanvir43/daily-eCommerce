@@ -30,7 +30,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'groups',
             'roles',
             'username',
-            # 'phone',
+            'phone',
             'email',
             'password',
             'group_name',

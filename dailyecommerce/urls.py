@@ -19,6 +19,8 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 
+from rest_framework_simplejwt import views as jwt_views
+
 # from rest_framework_swagger.views import get_swagger_view
 
 from django.views.decorators.csrf import csrf_exempt
@@ -32,6 +34,8 @@ urlpatterns = [
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
     path('api/', include('products.urls')),
     path('api/', include('account.urls')),
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     # path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     url(r'^api-auth/', include('rest_framework.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import (
+    Group,
+    AbstractUser,
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin,
@@ -49,7 +51,7 @@ class UserManager(BaseUserManager):
     to create `User` objects.
     """
 
-    def create_user(self, username, email, password=None):
+    def create_user(self, username, email, password=None, phone=None):
         """Create and return a `User` with an email, username and password."""
         if username is None:
             raise TypeError('Users must have a username.')
@@ -57,20 +59,24 @@ class UserManager(BaseUserManager):
         if email is None:
             raise TypeError('Users must have an email address.')
 
-        user = self.model(username=username, email=self.normalize_email(email))
+        user = self.model(
+            username=username,
+            email=self.normalize_email(email),
+            phone=phone,
+        )
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, username, email, password, phone=None):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
         if password is None:
             raise TypeError('Superusers must have a password.')
 
-        user = self.create_user(username, email, password)
+        user = self.create_user(username, email, password, phone)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -78,10 +84,14 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser):
     # Each `User` needs a human-readable unique identifier that we can use to
     # represent the `User` in the UI. We want to index this column in the
     # database to improve lookup performance.
+    first_name = None
+    last_name = None
+    groups = models.ManyToManyField(Group)
+    roles = models.ManyToManyField(Role)
     username = models.CharField(db_index=True, max_length=255, unique=True)
 
     # We also need a way to contact the user and a way for the user to identify
@@ -96,6 +106,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # will simply offer users a way to deactivate their account instead of
     # letting them delete it. That way they won't show up on the site anymore,
     # but we can still analyze the data.
+    phone = PhoneNumberField(unique=True)
     is_active = models.BooleanField(default=True)
 
     # The `is_staff` flag is expected by Django to determine who can and cannot
@@ -118,7 +129,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
-    objects = UserManager()
+    # objects = UserManager()
 
     def __str__(self):
         """

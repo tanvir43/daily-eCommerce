@@ -9,6 +9,7 @@ from rest_framework.generics import (
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from products.models import Category, Product
 from products.serializers import (
@@ -24,34 +25,40 @@ from products.serializers import (
 class CategoryCreateAPIView(CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class CategoryDetailAPIView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
     lookup_field = "slug"
+    permission_classes = (IsAuthenticated,)
     # lookup_url_kwarg = "abc"
 
 
 class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.filter(parent=None)
     serializer_class = CategoryListSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ProductCreateAPIView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ProductDetailAPIView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     lookup_field = "slug"
+    permission_classes = (IsAuthenticated,)
     # lookup_url_kwarg = "abc"
 
 
@@ -59,6 +66,7 @@ class ProductUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     lookup_field = "slug"
+    permission_classes = (IsAuthenticated,)
 
     # def patch(self, request, *args, **kwargs):
     #     print("results", kwargs)
@@ -82,6 +90,7 @@ class ProductDeleteAPIView(DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     lookup_field = "slug"
+    permission_classes = (IsAuthenticated,)
 
 
 

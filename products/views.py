@@ -32,14 +32,14 @@ class CategoryDetailAPIView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
     lookup_field = "slug"
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     # lookup_url_kwarg = "abc"
 
 
 class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.filter(parent=None)
     serializer_class = CategoryListSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
 
 class ProductCreateAPIView(CreateAPIView):
@@ -51,14 +51,14 @@ class ProductCreateAPIView(CreateAPIView):
 class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
 
 class ProductDetailAPIView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     lookup_field = "slug"
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     # lookup_url_kwarg = "abc"
 
 

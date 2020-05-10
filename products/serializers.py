@@ -55,6 +55,33 @@ class CategoryChildSerializer(ModelSerializer):
         ]
 
 
+class ProductListSerializer(ModelSerializer):
+    # category = SerializerMethodField()
+    category = CategorySerializer()
+
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'slug',
+            'category',
+            'unit',
+            'price',
+            'minimal_variant_price',
+            'description',
+            'currency',
+            'available',
+            'stock',
+            'created_at',
+            'updated_at',
+            'image',
+            'image_alt',
+            'charge_taxes'
+        ]
+    # def get_category(self, obj):
+    #     return str(obj.category.name)
+
+
 class CategoryListSerializer(ModelSerializer):
     # url = HyperlinkedIdentityField(
     #     view_name='category-detail',
@@ -63,6 +90,8 @@ class CategoryListSerializer(ModelSerializer):
     # sub_category = SerializerMethodField()
     # parent = PrimaryKeyRelatedField(queryset=Category.objects.filter(parent=None))
     sub_category = RecursiveSerializer(many=True, read_only=True)
+    products = ProductListSerializer(many=True)
+    # products = ProductTestSerializer(source='product.all', many=True)
 
     # def get_parent(self, instance):
     #     print("instance", instance)
@@ -79,8 +108,12 @@ class CategoryListSerializer(ModelSerializer):
             'parent',
             'background_image',
             'background_image_alt',
-            'sub_category'
+            'sub_category',
+            'products'
         )
+
+    # def get_products(self, obj):
+    #     return obj.products.all()
 
     # sub_category = SerializerMethodField()
     # sub_category = SubcategorySerializer(many=True, read_only=True)
@@ -114,32 +147,6 @@ class CategoryDetailSerializer(ModelSerializer):
         if obj.is_parent:
             return CategoryChildSerializer(obj.sub_category, many=True).data
         return None
-
-
-class ProductListSerializer(ModelSerializer):
-    # category = SerializerMethodField()
-
-    class Meta:
-        model = Product
-        fields = [
-            'name',
-            'slug',
-            'category',
-            'unit',
-            'price',
-            'minimal_variant_price',
-            'description',
-            'currency',
-            'available',
-            'stock',
-            'created_at',
-            'updated_at',
-            'image',
-            'image_alt',
-            'charge_taxes'
-        ]
-    # def get_category(self, obj):
-    #     return str(obj.category.name)
 
 
 class ProductDetailSerializer(ModelSerializer):

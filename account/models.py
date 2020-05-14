@@ -91,8 +91,8 @@ class User(AbstractUser):
     username = None
     first_name = models.CharField(max_length=150, blank=True, null=True)
     last_name = models.CharField(max_length=150, blank=True, null=True)
-    groups = models.ManyToManyField(Group, blank=True, null=True)
-    roles = models.ManyToManyField(Role, null=True, blank=True)
+    groups = models.ManyToManyField(Group)
+    roles = models.ManyToManyField(Role)
     # username = models.CharField(db_index=True, max_length=255, unique=True)
 
     # We also need a way to contact the user and a way for the user to identify

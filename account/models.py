@@ -88,6 +88,7 @@ class User(AbstractUser):
     # Each `User` needs a human-readable unique identifier that we can use to
     # represent the `User` in the UI. We want to index this column in the
     # database to improve lookup performance.
+    username = None
     first_name = models.CharField(max_length=150, blank=True, null=True)
     last_name = models.CharField(max_length=150, blank=True, null=True)
     groups = models.ManyToManyField(Group, blank=True, null=True)
@@ -153,18 +154,16 @@ class User(AbstractUser):
     def get_full_name(self):
         """
         This method is required by Django for things like handling emails.
-        Typically this would be the user's first and last name. Since we do
-        not store the user's real name, we return their username instead.
+        Typically this would be the user's first and last name.
         """
-        return self.username
+        return "%s %s" % (self.first_name, self.last_name)
 
     def get_short_name(self):
         """
         This method is required by Django for things like handling emails.
-        Typically, this would be the user's first name. Since we do not store
-        the user's real name, we return their username instead.
+        Typically, this would be the user's first name.
         """
-        return self.username
+        return self.first_name
 
     def _generate_jwt_token(self):
         """

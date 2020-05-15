@@ -81,7 +81,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     # characters, and can not be read by the client.
     password = serializers.CharField(
         max_length=128,
-        min_length=8,
+        min_length=6,
         write_only=True
     )
 
@@ -110,11 +110,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'groups',
             'roles',
             # 'permission',
-            'username',
             'phone',
             'email',
             'password',
             'token',
+            'terms'
         )
 
     def validate_password(self, value: str) -> str:
@@ -164,7 +164,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=255, read_only=True)
+    # username = serializers.CharField(max_length=255, read_only=True)
     email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
@@ -224,7 +224,7 @@ class UserLoginSerializer(serializers.Serializer):
         #         'User with given email and password does not exists'
         #     )
         return {
-            'username': user.username,
+            # 'username': user.username,
             'email': user.email,
             'token': user.token
         }
@@ -250,27 +250,3 @@ class UserLoginSerializer(serializers.Serializer):
         #         gender=profile_data['gender']
         #     )
         #     return user
-
-
-# class UserRoleSerializer(serializers.ModelSerializer):
-#     user_list = UserRegistrationSerializer(many=True, read_only=True)
-#
-#     class Meta:
-#         model = Role
-#         fields = (
-#             'name',
-#             'user_list'
-#         )
-
-
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = UserProfile
-#         fields = (
-#             'first_name',
-#             'last_name',
-#             'phone_number',
-#             'age',
-#             'gender'
-#         )
-

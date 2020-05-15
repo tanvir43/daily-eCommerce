@@ -120,6 +120,7 @@ class User(AbstractUser):
 
     # A timestamp reprensenting when this object was last updated.
     updated_at = models.DateTimeField(auto_now=True)
+    terms = models.BooleanField(default=False)
 
     # More fields required by Django when specifying a custom user model.
 

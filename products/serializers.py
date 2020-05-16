@@ -11,8 +11,8 @@ from .models import Category, Product
 
 class RecursiveSerializer(serializers.Serializer):
     def to_representation(self, value):
-        print("Value", value)
-        print("__Class__", self.parent.parent.__class__(Category.objects.filter(parent=None)))
+        # print("Value", value)
+        # print("__Class__", self.parent.parent.__class__(Category.objects.filter(parent=None)))
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
 
@@ -31,6 +31,12 @@ class CategorySerializer(ModelSerializer):
             'background_image_alt',
             'category'
         ]
+    read_only_fields = ['parent']
+
+    def create(self, validated_data):
+        print("Without slug", validated_data)
+        resutl = Category.objects.create(**validated_data)
+        return resutl
 
     def get_category(self, obj):
         if not obj.is_parent:
@@ -57,14 +63,14 @@ class CategoryChildSerializer(ModelSerializer):
 
 class ProductListSerializer(ModelSerializer):
     # category = SerializerMethodField()
-    category = CategorySerializer()
+    # category = CategorySerializer()
 
     class Meta:
         model = Product
         fields = [
             'name',
             'slug',
-            'category',
+            # 'category',
             'unit',
             'price',
             'minimal_variant_price',
@@ -158,7 +164,7 @@ class ProductDetailSerializer(ModelSerializer):
             'id',
             'name',
             'slug',
-            'category',
+            # 'category',
             'unit',
             'price',
             'minimal_variant_price',

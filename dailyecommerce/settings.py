@@ -26,7 +26,7 @@ SECRET_KEY = 'ty@*&-yvu759_b9n6(%_ozn_#jb-wn)f$ggp79@a@6o72zstqc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','http://127.0.0.1:8000', 'http://127.0.0.1:3000']
+ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','localhost', 'http://127.0.0.1:3000']
 
 
 # Application definition

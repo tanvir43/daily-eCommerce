@@ -26,7 +26,7 @@ SECRET_KEY = 'ty@*&-yvu759_b9n6(%_ozn_#jb-wn)f$ggp79@a@6o72zstqc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','localhost']
+ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','http://127.0.0.1:8000', 'http://127.0.0.1:3000']
 
 
 # Application definition
@@ -167,7 +167,10 @@ REST_FRAMEWORK = {
         'account.backends.JWTAuthentication',
     ],
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 
 }
 

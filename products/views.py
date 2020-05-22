@@ -28,6 +28,13 @@ class CategoryCreateAPIView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
+class CategoryUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
+    lookup_field = "slug"
+    permission_classes = (IsAuthenticated,)
+
+
 class CategoryDetailAPIView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
@@ -40,6 +47,13 @@ class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.filter(parent=None)
     serializer_class = CategoryListSerializer
     permission_classes = (AllowAny,)
+
+
+class CategoryDeleteAPIView(DestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
+    lookup_field = "slug"
+    permission_classes = (IsAuthenticated,)
 
 
 class ProductCreateAPIView(CreateAPIView):

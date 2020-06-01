@@ -20,6 +20,10 @@ from products.serializers import (
     CategoryChildSerializer,
     CategoryDetailSerializer,
     )
+from .pagination import (
+    ProductLimitOffsetPagination,
+    ProductPageNumberPagination
+    )
 
 
 class CategoryCreateAPIView(CreateAPIView):
@@ -66,6 +70,7 @@ class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     permission_classes = (AllowAny,)
+    pagination_class = ProductPageNumberPagination #ProductListLimitOffsetPagination
 
 
 class ProductDetailAPIView(RetrieveAPIView):

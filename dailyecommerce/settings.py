@@ -188,3 +188,16 @@ CORS_ORIGIN_REGEX_WHITELIST = [
     "http://localhost:8000",
     "http://127.0.0.1:3000"
 ]
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}

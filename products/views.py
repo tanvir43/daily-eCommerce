@@ -74,7 +74,7 @@ class ProductListAPIView(ListAPIView):
     permission_classes = (AllowAny,)
     pagination_class = ProductPageNumberPagination #ProductListLimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['name']
+    filterset_fields = ['name', 'slug']
 
 
 class ProductDetailAPIView(RetrieveAPIView):

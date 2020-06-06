@@ -98,11 +98,12 @@ class Product(DateTimeModel):
     stock = models.PositiveIntegerField()
     # created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="product", blank=True, null=True)
-    image_alt = models.CharField(max_length=128, blank=True)
+    image_alt = models.CharField(max_length=128, blank=True, verbose_name="Image Alt")
     # updated_at = models.DateTimeField(auto_now=True, null=True)
-    charge_taxes = models.BooleanField(default=True)
+    charge_taxes = models.BooleanField(default=True ,verbose_name='Charge Taxes')
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     quantity = models.FloatField(default=0.00)
+    count_sold = models.BigIntegerField(default=0, verbose_name='Count Sold')
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )

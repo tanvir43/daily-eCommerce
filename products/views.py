@@ -25,6 +25,8 @@ from .pagination import (
     ProductPageNumberPagination
     )
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class CategoryCreateAPIView(CreateAPIView):
     queryset = Category.objects.all()
@@ -71,6 +73,8 @@ class ProductListAPIView(ListAPIView):
     serializer_class = ProductListSerializer
     permission_classes = (AllowAny,)
     pagination_class = ProductPageNumberPagination #ProductListLimitOffsetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
 
 
 class ProductDetailAPIView(RetrieveAPIView):

@@ -1,16 +1,14 @@
 from django.db import models
-from mptt.models import MPTTModel, TreeForeignKey
-from mptt.managers import TreeManager
 
 from account.models import User, Address
+from commons.abstract import DateTimeModel
 
-
-class DateTimeModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-
-    class Meta:
-        abstract = True
+# class DateTimeModel(models.Model):
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+#
+#     class Meta:
+#         abstract = True
 
 
 class CategoryManager(models.Manager):

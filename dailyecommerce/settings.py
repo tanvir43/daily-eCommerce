@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     #Internal App
     'account',
     'products',
-    'inventory'
+    'inventory',
+    'order',
 
     # 'graphene_django',
 ]
@@ -191,11 +192,11 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
-      # 'Basic': {
-      #       'type': 'basic'
-      # },
+      'Basic': {
+            'type': 'basic'
+      },
       'Token': {
-            'type': 'Token',
+            'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
       }

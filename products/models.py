@@ -2,6 +2,8 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
+from account.models import User, Address
+
 
 class DateTimeModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -97,13 +99,13 @@ class Product(DateTimeModel):
     available = models.BooleanField(default=True)
     stock = models.PositiveIntegerField()
     # created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="product", blank=True, null=True)
+    image = models.ImageField(upload_to="product-images", blank=True, null=True)
     image_alt = models.CharField(max_length=128, blank=True, verbose_name="Image Alt")
     # updated_at = models.DateTimeField(auto_now=True, null=True)
     charge_taxes = models.BooleanField(default=True ,verbose_name='Charge Taxes')
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
-    quantity = models.FloatField(default=0.00)
     count_sold = models.BigIntegerField(default=0, verbose_name='Count Sold')
+    discount_price = models.FloatField(blank=True, null=True)
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )
@@ -119,3 +121,27 @@ class Product(DateTimeModel):
 
     def __str__(self):
         return self.name
+
+
+class OrderItem(DateTimeModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
+    product = models.ForeignKey('Product', related_name="order_items", on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product.name}"
+
+    def get_total_item_price(self):
+        return self.quantity * self.product.price
+
+    def get_total_discount_price(self):
+        return self.quantity * self.product.discount_price
+
+    def get_amount_saved(self):
+        return self.get_total_item_price() - self.get_total_discount_price()
+
+    def get_final_price(self):
+        if self.product.discount_price:
+            return self.get_total_discount_price()
+        return self.get_total_item_price()

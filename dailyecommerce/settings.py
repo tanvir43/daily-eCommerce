@@ -177,18 +177,19 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 
-# CORS_ORIGIN_WHITELIST = [
-#     "https://dailyecommerce.herokuapp.com",
-#     "http://127.0.0.1:8000",
-#     "http://127.0.0.1:3000"
-# ]
-
-CORS_ORIGIN_REGEX_WHITELIST = [
-    r"^https://\w+\.dailyecommerce.herokuapp\.com$",
-    "http://localhost:8000",
+CORS_ORIGIN_WHITELIST = [
+    "https://dailyecommerce.herokuapp.com",
+    "http://127.0.0.1:8000",
     "http://127.0.0.1:3000"
 ]
+
+# CORS_ORIGIN_REGEX_WHITELIST = [
+#     r"^https://\w+\.dailyecommerce.herokuapp\.com$",
+#     "http://localhost:8000",
+#     "http://127.0.0.1:3000"
+# ]
 
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {

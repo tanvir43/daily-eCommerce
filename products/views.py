@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from products.models import Category, Product
+from products.models import Category, Product, Unit
 from products.serializers import (
     ProductListSerializer,
     ProductDetailSerializer,
@@ -19,6 +19,7 @@ from products.serializers import (
     CategoryListSerializer,
     CategoryChildSerializer,
     CategoryDetailSerializer,
+    UnitSerializer,
     )
 from .pagination import (
     ProductLimitOffsetPagination,
@@ -83,6 +84,12 @@ class ProductDetailAPIView(RetrieveAPIView):
     lookup_field = "slug"
     permission_classes = (AllowAny,)
     # lookup_url_kwarg = "abc"
+
+
+class UnitListAPIView(ListAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+    permission_classes = (AllowAny,)
 
 
 class ProductUpdateAPIView(RetrieveUpdateAPIView):

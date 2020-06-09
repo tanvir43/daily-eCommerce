@@ -6,7 +6,13 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField
     )
 
-from .models import Category, Product
+from .models import Category, Product, Unit
+
+
+class UnitSerializer(ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
 
 
 class RecursiveSerializer(serializers.Serializer):

@@ -92,6 +92,12 @@ class UnitListAPIView(ListAPIView):
     permission_classes = (AllowAny,)
 
 
+class UnitCreateAPIView(CreateAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+    permission_classes = (IsAuthenticated,)
+
+
 class ProductUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer

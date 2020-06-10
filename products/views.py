@@ -98,6 +98,26 @@ class UnitCreateAPIView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
+class UnitDetailAPIView(RetrieveAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+    permission_classes = (AllowAny,)
+    # lookup_url_kwarg = "abc"
+
+
+class UnitUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class UnitDeleteAPIView(DestroyAPIView):
+    queryset = Unit.objects.all()
+    serializer_class = UnitSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+
 class ProductUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer

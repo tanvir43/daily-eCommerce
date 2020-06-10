@@ -16,4 +16,7 @@ urlpatterns = [
         path('products/<str:slug>/delete', views.ProductDetailAPIView.as_view(), name='product-delete'),
         path('unit/list', views.UnitListAPIView.as_view(), name='unit-list'),
         path('unit/create', views.UnitCreateAPIView.as_view(), name='unit-create'),
+        path('unit/<str:pk>/detail', views.UnitDetailAPIView.as_view(), name='unit-detail'),
+        path('unit/<str:pk>/edit', views.UnitUpdateAPIView.as_view(), name='unit-update'),
+        path('unit/<str:pk>/delete', views.UnitDeleteAPIView.as_view(), name='unit-delete'),
 ]

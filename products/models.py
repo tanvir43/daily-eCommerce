@@ -105,6 +105,7 @@ class Product(DateTimeModel):
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     count_sold = models.BigIntegerField(default=0, verbose_name='Count Sold')
     discount_price = models.FloatField(blank=True, null=True)
+    quantity = models.IntegerField(default=1)
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )

@@ -12,7 +12,7 @@ from .models import Category, Product, Unit
 class UnitSerializer(ModelSerializer):
     class Meta:
         model = Unit
-        fields = "__all__"
+        fields = ['id', 'name']
 
 
 class RecursiveSerializer(serializers.Serializer):
@@ -89,7 +89,8 @@ class ProductListSerializer(ModelSerializer):
             'updated_at',
             'image',
             'image_alt',
-            'charge_taxes'
+            'charge_taxes',
+            'quantity'
         ]
     # def get_category(self, obj):
     #     return str(obj.category.name)
@@ -183,6 +184,7 @@ class ProductDetailSerializer(ModelSerializer):
             'created_at',
             'updated_at',
             'image',
+            'quantity'
         ]
     # def get_category(self, obj):
     #     return str(obj.category.name)

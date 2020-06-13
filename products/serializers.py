@@ -70,6 +70,7 @@ class CategoryChildSerializer(ModelSerializer):
 class ProductListSerializer(ModelSerializer):
     # category = SerializerMethodField()
     # category = CategorySerializer()
+    unit = SerializerMethodField()
 
     class Meta:
         model = Product
@@ -92,6 +93,9 @@ class ProductListSerializer(ModelSerializer):
             'charge_taxes',
             'quantity'
         ]
+
+    def get_unit(self, obj):
+        return obj.unit.name
     # def get_category(self, obj):
     #     return str(obj.category.name)
 
@@ -166,6 +170,7 @@ class CategoryDetailSerializer(ModelSerializer):
 
 class ProductDetailSerializer(ModelSerializer):
     # category = SerializerMethodField()
+    unit = SerializerMethodField()
 
     class Meta:
         model = Product
@@ -186,5 +191,8 @@ class ProductDetailSerializer(ModelSerializer):
             'image',
             'quantity'
         ]
+
+    def get_unit(self, obj):
+        return obj.unit.name
     # def get_category(self, obj):
     #     return str(obj.category.name)

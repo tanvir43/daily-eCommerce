@@ -3,7 +3,6 @@ from uuid import uuid4
 from django.db import models
 
 from account.models import User, Address
-from products.models import OrderItem
 
 from commons.abstract import DateTimeModel
 from commons.choices import OrderStatus
@@ -13,7 +12,6 @@ from commons.choices import OrderStatus
 
 class Order(DateTimeModel):
     user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
-    items = models.ManyToManyField(OrderItem)
     status = models.CharField(
         max_length=32, default=OrderStatus.DRAFT, choices=OrderStatus.CHOICES
     )

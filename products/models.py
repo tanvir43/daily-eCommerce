@@ -1,6 +1,8 @@
 from django.db import models
 
 from account.models import User, Address
+from order.models import Order
+
 from commons.abstract import DateTimeModel
 
 # class DateTimeModel(models.Model):
@@ -125,8 +127,9 @@ class Product(DateTimeModel):
 
 class OrderItem(DateTimeModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
+    order = models.ManyToManyField(Order)
     product = models.ForeignKey('Product', related_name="order_items", on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):

@@ -36,16 +36,16 @@ class OrderCreateAPIView(CreateAPIView):
         status = order_data['status']
         currency = order_data['currency']
         address = Address.objects.get(id=shipping_address)
-        # order = Order(
-        #     user=user,
-        #     shipping_address=address,
-        #     billing_address=address,
-        #     currency=currency
-        # )
-        # order.save()
-        serializer = self.serializer_class(data=order_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
+        order = Order(
+            user=user,
+            shipping_address=address,
+            billing_address=address,
+            currency=currency
+        )
+        order.save()
+        # serializer = self.serializer_class(data=order_data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save(user=request.user)
         for item in data['items']:
             product = Product.objects.get(slug=item['slug'])
             order_item = OrderItem.objects.create(
@@ -55,6 +55,6 @@ class OrderCreateAPIView(CreateAPIView):
                 quantity=item['quantity']
             )
             order_item.order.add(order)
-        return Response(serializer, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
         # product_ids = self.request['product_ids']

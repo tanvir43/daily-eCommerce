@@ -53,6 +53,7 @@ urlpatterns = [
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
     path('api/', include('products.urls')),
     path('api/', include('account.urls')),
+    path('api/', include('order.urls')),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('swagger(?P<format>\.json|\.yaml)', schema_view.without_ui(cache_timeout=0), name='schema-json'),

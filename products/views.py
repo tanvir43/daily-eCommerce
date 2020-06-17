@@ -20,8 +20,7 @@ from products.serializers import (
     CategoryListSerializer,
     CategoryChildSerializer,
     CategoryDetailSerializer,
-    UnitSerializer,
-    ProductSerializer
+    UnitSerializer
     )
 from .pagination import (
     ProductLimitOffsetPagination,

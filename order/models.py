@@ -46,10 +46,10 @@ class Order(DateTimeModel):
             total -= self.coupon.amount
         return total
 
-    def save(self, *args, **kwargs):
-        if not self.token:
-            self.token = str(uuid4())
-        return super(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.token:
+    #         self.token = str(uuid4())
+    #     return super(*args, **kwargs)
 
 
 class Payment(DateTimeModel):

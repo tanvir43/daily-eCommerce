@@ -48,13 +48,15 @@ class OrderCreateAPIView(CreateAPIView):
         # serializer.save(user=request.user)
         for item in data['items']:
             product = Product.objects.get(slug=item['slug'])
-            order_item = OrderItem.objects.create(
+            print("Item", item)
+            order_item = OrderItem(
                 user=user,
                 product=product,
                 ordered=True,
-                quantity=item['quantity']
+                quantity=item['quantity'],
             )
+            order_item.save()
             order_item.order.add(order)
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=201)
 
         # product_ids = self.request['product_ids']

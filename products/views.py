@@ -96,7 +96,7 @@ class ProductUnderCategoryListView(RetrieveAPIView):
     def get(self, request, slug):
         product = Product.objects.filter(category__slug=slug)
         print("aaa", product)
-        serializer = ProductSerializer(product, many=True)
+        serializer = ProductDetailSerializer(product, many=True)
         return Response(serializer.data)
 
 

@@ -211,7 +211,7 @@ class Address(DateTimeModel):
     #     return "%s %s" % (self.first_name, self.last_name)
 
     def __str__(self):
-        return self.user.name
+        return self.city
 
     # def __eq__(self, other):
     #     if not isinstance(other, Address):

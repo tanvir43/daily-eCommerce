@@ -75,7 +75,7 @@ class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     permission_classes = (AllowAny,)
-    pagination_class = ProductPageNumberPagination #PageNumberPagination #ProductListLimitOffsetPagination
+    pagination_class = ProductPageNumberPagination #ProductListLimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['price']
 

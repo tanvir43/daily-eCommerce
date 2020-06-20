@@ -11,6 +11,7 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.pagination import PageNumberPagination
 
 from products.models import Category, Product, Unit
 from products.serializers import (
@@ -74,9 +75,9 @@ class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     permission_classes = (AllowAny,)
-    pagination_class = ProductPageNumberPagination #ProductListLimitOffsetPagination
+    pagination_class = ProductPageNumberPagination #PageNumberPagination #ProductListLimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['name', 'slug']
+    filterset_fields = ['price']
 
 
 class ProductDetailAPIView(RetrieveAPIView):

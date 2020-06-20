@@ -22,7 +22,7 @@ class ProductLimitOffsetPagination(LimitOffsetPagination):
 
 class ProductPageNumberPagination(PageNumberPagination):
     page_size = 10
-    page_size_query_param = 'page_size'
+    # page_size_query_param = 'page_size'
 
     def paginate_queryset(self, queryset, request, view=None):
         """
@@ -45,8 +45,8 @@ class ProductPageNumberPagination(PageNumberPagination):
             #     page_number=page_number, message=str(exc)
             # )
             msg = {
-                'next': None,
-                'previous': None,
+                'next': "null",
+                'previous': "null",
                 'count': 0,
                 'limit': 0,
                 'results': []

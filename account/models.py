@@ -191,6 +191,7 @@ class Address(DateTimeModel):
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     country = CountryField(default="Bangladesh")
     phone = PhoneNumberField(default="")
+    deleted = models.BooleanField(default=False)
 
     # first_name = models.CharField(max_length=256, blank=True, null=True)
     # last_name = models.CharField(max_length=256, blank=True, null=True)

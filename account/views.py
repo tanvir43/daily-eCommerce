@@ -14,12 +14,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from account.models import Role, User
+from account.models import Address, Role, User
 from account.serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
     UserRoleSerializer,
-    UserGroupSerializer
+    UserGroupSerializer,
+    AddressSerializer
     )
 
 
@@ -76,5 +77,36 @@ class UserRoleCreateAPIView(CreateAPIView):
 class UserGroupCreateAPIView(CreateAPIView):
     queryset = Group.objects.all()
     serializer_class = UserGroupSerializer
+
+
+class AddressListAPIView(ListAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = (AllowAny,)
+
+
+class AddressCreateAPIView(CreateAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class AddressDetailAPIView(RetrieveAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = (AllowAny,)
+    # lookup_url_kwarg = "abc"
+
+
+class AddressUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class AddressDeleteAPIView(DestroyAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = (IsAuthenticated,)
 
 

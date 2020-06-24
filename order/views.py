@@ -1,4 +1,3 @@
-import json
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -51,18 +50,18 @@ class OrderCreateAPIView(CreateAPIView):
         # serializer.save(user=request.user)
             for item in data['items']:
                 product = Product.objects.get(slug=item['slug'])
-                print("Item", item)
-                if product.stock >= 1:
-                    order_item = OrderItem(
-                        user=user,
-                        product=product,
-                        ordered=True,
-                        quantity=item['quantity'],
-                    )
-                    product.stock -= item['quantity']
-                    product.save()
-                    order_item.save()
-                    order_item.order.add(order)
+                if product:
+                    if product.stock >= 1:
+                        order_item = OrderItem(
+                            user=user,
+                            product=product,
+                            ordered=True,
+                            quantity=item['quantity'],
+                        )
+                        product.stock -= item['quantity']
+                        product.save()
+                        order_item.save()
+                        order_item.order.add(order)
             return Response({"status": "order successfully placed"}, status=201)
 
         # product_ids = self.request['product_ids']

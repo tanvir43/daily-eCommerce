@@ -80,7 +80,7 @@ class UserGroupCreateAPIView(CreateAPIView):
 
 
 class AddressListAPIView(ListAPIView):
-    queryset = Address.objects.all()
+    queryset = Address.objects.filter(deleted=False)
     serializer_class = AddressSerializer
     permission_classes = (AllowAny,)
 
@@ -104,9 +104,19 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
-class AddressDeleteAPIView(DestroyAPIView):
+class AddressDeleteAPIView(RetrieveUpdateAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
+
+    def patch(self, request, pk, *args, **kwargs):
+        try:
+            address_obj = Address.objects.get(id=pk)
+        except Exception as e:
+            return Response({"error": "Address not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            address_obj.deleted = True
+            address_obj.save()
+            return Response({"status": "address deleted successfully"}, status=status.HTTP_200_OK)
 
 

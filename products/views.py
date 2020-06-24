@@ -101,7 +101,6 @@ class ProductUnderCategoryListView(RetrieveAPIView):
         return Response(serializer.data)
 
 
-
 class UnitListAPIView(ListAPIView):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer

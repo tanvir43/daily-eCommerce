@@ -191,6 +191,7 @@ class Address(DateTimeModel):
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     country = CountryField(default="Bangladesh")
     phone = PhoneNumberField(default="")
+    deleted = models.BooleanField(default=False)
 
     # first_name = models.CharField(max_length=256, blank=True, null=True)
     # last_name = models.CharField(max_length=256, blank=True, null=True)
@@ -205,13 +206,15 @@ class Address(DateTimeModel):
 
     class Meta:
         ordering = ("pk",)
+        verbose_name = "Address"
+        verbose_name_plural = "Address's"
 
     # @property
     # def full_name(self):
     #     return "%s %s" % (self.first_name, self.last_name)
 
     def __str__(self):
-        return self.city, self.pk
+        return f"{self.city}, {self.pk}"
 
     # def __eq__(self, other):
     #     if not isinstance(other, Address):

@@ -11,7 +11,7 @@ from rest_framework_jwt.settings import api_settings
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 
-from .models import Role, User
+from .models import Address, Role, User
 
 
 class UserRoleSerializer(serializers.ModelSerializer):
@@ -250,3 +250,8 @@ class UserLoginSerializer(serializers.Serializer):
         #         gender=profile_data['gender']
         #     )
         #     return user
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = "__all__"

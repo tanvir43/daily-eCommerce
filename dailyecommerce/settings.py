@@ -55,6 +55,12 @@ INSTALLED_APPS = [
     'inventory',
     'order',
 
+    # Django Elasticsearch integration
+    'django_elasticsearch_dsl',
+
+    # Django REST framework Elasticsearch integration (this package)
+    'django_elasticsearch_dsl_drf',
+
     # 'graphene_django',
 ]
 
@@ -174,6 +180,18 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 
+}
+
+# Elasticsearch configuration
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
+
+# Name of the Elasticsearch index
+ELASTICSEARCH_INDEX_NAMES = {
+    'products.documents.book': 'product'
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

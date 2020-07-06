@@ -127,7 +127,7 @@ class Product(DateTimeModel):
 
 class OrderItem(DateTimeModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order = models.ManyToManyField(Order)
+    order = models.ManyToManyField(Order, related_name='order_items')
     product = models.ForeignKey('Product', related_name="order_items", on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)

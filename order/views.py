@@ -71,3 +71,18 @@ class OrderCreateAPIView(CreateAPIView):
             return Response({"status": "order successfully placed"}, status=201)
 
         # product_ids = self.request['product_ids']
+
+
+class OrderCancelAPI(RetrieveUpdateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, pk):
+        return Order.objects.get(pk=pk)
+
+    def patch(self, request, pk):
+        order = self.get_object(pk=pk)
+        serializer = self.serializer_class(order, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        return Response(status=status.HTTP_200_OK)

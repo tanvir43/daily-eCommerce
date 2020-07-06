@@ -6,7 +6,8 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField
     )
 
-from .models import Category, Product, Unit
+from .models import Category, Product, Unit, OrderItem
+from order.models import Order
 
 
 class UnitSerializer(ModelSerializer):
@@ -196,3 +197,22 @@ class ProductDetailSerializer(ModelSerializer):
         return obj.unit.name
     # def get_category(self, obj):
     #     return str(obj.category.name)
+
+
+class OrderItemSerializer(ModelSerializer):
+    product = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+
+    def get_price(self, obj):
+        return obj.get_final_price()
+
+    def get_product(self, obj):
+        return obj.product.name
+
+    class Meta:
+        model = OrderItem
+        fields = (
+            'product',
+            'quantity',
+            'price'
+        )

@@ -13,7 +13,7 @@ from commons.choices import OrderStatus
 class Order(DateTimeModel):
     user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
     status = models.CharField(
-        max_length=32, default=OrderStatus.DRAFT, choices=OrderStatus.CHOICES
+        max_length=32, default=OrderStatus.PENDING, choices=OrderStatus.CHOICES
     )
     currency = models.CharField(
         max_length=30,

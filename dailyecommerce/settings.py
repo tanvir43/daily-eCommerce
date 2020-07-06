@@ -203,3 +203,9 @@ SWAGGER_SETTINGS = {
       }
    }
 }
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'saddhosaddho@gmail.com'
+EMAIL_HOST_PASSWORD = ')(*!@#poiqwe'
+EMAIL_PORT = 587

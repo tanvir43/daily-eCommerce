@@ -21,7 +21,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 class OrderListAPIView(ListAPIView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by('-created_at')
     serializer_class = OrderSerializer
     permission_classes = (AllowAny,)
 

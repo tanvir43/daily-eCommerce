@@ -20,6 +20,12 @@ from .serializers import OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 
+class OrderListAPIView(ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (AllowAny,)
+
+
 class OrderCreateAPIView(CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer

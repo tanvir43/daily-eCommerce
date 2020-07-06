@@ -1,4 +1,6 @@
 from django.contrib.auth.models import Group
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode
 
 from rest_framework.generics import (
     CreateAPIView,
@@ -118,5 +120,21 @@ class AddressDeleteAPIView(RetrieveUpdateAPIView):
             address_obj.deleted = True
             address_obj.save()
             return Response({"status": "address deleted successfully"}, status=status.HTTP_200_OK)
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 

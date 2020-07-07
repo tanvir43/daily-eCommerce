@@ -54,21 +54,37 @@ class OrderCreateAPIView(CreateAPIView):
         # serializer = self.serializer_class(data=order_data)
         # serializer.is_valid(raise_exception=True)
         # serializer.save(user=request.user)
-            for item in data['items']:
-                product = Product.objects.get(slug=item['slug'])
-                if product:
-                    if product.stock >= 1:
-                        order_item = OrderItem(
-                            user=user,
-                            product=product,
-                            ordered=True,
-                            quantity=item['quantity'],
-                        )
-                        product.stock -= item['quantity']
-                        product.save()
-                        order_item.save()
-                        order_item.order.add(order)
-            return Response({"status": "order successfully placed"}, status=201)
+            if len(data['items']) > 1:
+                for item in data['items']:
+                    product = Product.objects.get(slug=item['slug'])
+                    if product:
+                        if product.stock >= 1:
+                            if item['quantity'] > 1:
+                                order_item = OrderItem(
+                                    user=user,
+                                    product=product,
+                                    ordered=True,
+                                    quantity=item['quantity'],
+                                )
+                                product.stock -= item['quantity']
+                                product.save()
+                                order_item.save()
+                                order_item.order.add(order)
+                            else:
+                                order_item = OrderItem(
+                                    user=user,
+                                    product=product,
+                                    ordered=True,
+                                    quantity=1,
+                                )
+                                product.stock -= item['quantity']
+                                product.save()
+                                order_item.save()
+                                order_item.order.add(order)
+                return Response({"status": "order successfully placed"}, status=201)
+            else:
+                return Response({"error": "Please select an item"}, status=400)
+
 
         # product_ids = self.request['product_ids']
 

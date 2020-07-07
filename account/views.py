@@ -92,6 +92,14 @@ class AddressCreateAPIView(CreateAPIView):
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
 
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        user = request.user
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+        return Response({'status': 'Address saved successfully'}, status=status.HTTP_201_CREATED)
+
 
 class AddressDetailAPIView(RetrieveAPIView):
     queryset = Address.objects.all()

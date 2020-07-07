@@ -254,4 +254,15 @@ class UserLoginSerializer(serializers.Serializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = "__all__"
+        fields = (
+            "user",
+            "name",
+            "company_name",
+            "address",
+            "city",
+            "postal_code",
+            "country",
+            "phone",
+            "area",
+            "deleted"
+        )

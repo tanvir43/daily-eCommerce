@@ -74,6 +74,7 @@ class ProductListSerializer(ModelSerializer):
     # category = SerializerMethodField()
     # category = CategorySerializer()
     unit = SerializerMethodField()
+    image = SerializerMethodField()
 
     class Meta:
         model = Product
@@ -99,6 +100,9 @@ class ProductListSerializer(ModelSerializer):
 
     def get_unit(self, obj):
         return obj.unit.name
+
+    def get_image(self, obj):
+        return obj.image.url
     # def get_category(self, obj):
     #     return str(obj.category.name)
 

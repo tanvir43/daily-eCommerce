@@ -184,7 +184,7 @@ class User(AbstractUser):
 
 
 class Address(DateTimeModel):
-    user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE, blank=True)
     name = models.CharField(max_length=100)
     company_name = models.CharField(max_length=256, blank=True, null=True)
     address = models.TextField(max_length=300)

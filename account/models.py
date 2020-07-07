@@ -185,13 +185,13 @@ class User(AbstractUser):
 
 class Address(DateTimeModel):
     user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE, blank=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=256)
     company_name = models.CharField(max_length=256, blank=True, null=True)
-    address = models.TextField(max_length=300)
+    address = models.TextField(max_length=256)
     city = models.CharField(max_length=256, null=True, blank=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
-    country = CountryField(default="Bangladesh")
-    phone = PhoneNumberField()
+    country = CountryField(default="Bangladesh", max_length=256)
+    phone = PhoneNumberField(max_length=256)
     area = models.CharField(max_length=256)
     deleted = models.BooleanField(default=False)
 

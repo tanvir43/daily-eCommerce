@@ -1,3 +1,5 @@
+import base64
+
 from rest_framework import serializers
 from rest_framework.serializers import (
     ModelSerializer,
@@ -200,8 +202,20 @@ class ProductDetailSerializer(ModelSerializer):
 
 
 class OrderItemSerializer(ModelSerializer):
-    product = serializers.SerializerMethodField()
-    price = serializers.SerializerMethodField()
+    product = SerializerMethodField()
+    price = SerializerMethodField()
+    unit = SerializerMethodField()
+    image = SerializerMethodField()
+    slug = SerializerMethodField()
+
+    def get_slug(self, obj):
+        return obj.product.slug
+
+    def get_image(self, obj):
+        return obj.product.image.url
+
+    def get_unit(self, obj):
+        return obj.product.unit.name
 
     def get_price(self, obj):
         return obj.get_final_price()
@@ -214,5 +228,8 @@ class OrderItemSerializer(ModelSerializer):
         fields = (
             'product',
             'quantity',
-            'price'
+            'price',
+            'unit',
+            'slug',
+            'image'
         )

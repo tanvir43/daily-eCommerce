@@ -70,6 +70,15 @@ class ProductCreateAPIView(CreateAPIView):
     serializer_class = ProductListSerializer
     permission_classes = (IsAuthenticated,)
 
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        if data['quantity'] != 0:
+            serializer = self.serializer_class(data=data)
+            serializer.is_valid(raise_exception=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"error": "You have to set quantity more than 0"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()

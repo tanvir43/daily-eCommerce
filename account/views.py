@@ -87,6 +87,18 @@ class AddressListAPIView(ListAPIView):
     permission_classes = (AllowAny,)
 
 
+class AddressListAPIView(ListAPIView):
+    queryset = Address.objects.filter(deleted=False)
+    serializer_class = AddressSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        address = Address.objects.filter(user=user, deleted=False)
+        serializer = self.serializer_class(address, many=True)
+        return Response(serializer.data)
+
+
 class AddressCreateAPIView(CreateAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
@@ -104,14 +116,34 @@ class AddressCreateAPIView(CreateAPIView):
 class AddressDetailAPIView(RetrieveAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-    permission_classes = (AllowAny,)
-    # lookup_url_kwarg = "abc"
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            address = Address.objects.get(id=pk)
+        except Exception as e:
+            return Response({"error": "Address not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer = self.serializer_class(address)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AddressUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
+
+    def patch(self, request, pk, *args, **kwargs):
+        try:
+            address = Address.objects.get(id=pk)
+        except Exception as e:
+            return Response({"error": "Address not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            data = request.data
+            serializer = self.serializer_class(address, data=data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({"status": "Successfully updated"}, status=status.HTTP_200_OK)
 
 
 class AddressDeleteAPIView(RetrieveUpdateAPIView):

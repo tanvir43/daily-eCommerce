@@ -1,6 +1,6 @@
 from django.urls import path
 
-from account import views
+from account import views, admin_views
 
 urlpatterns = [
         path('user/signup', views.UserRegistrationAPIView.as_view(), name='user-signup'),
@@ -11,6 +11,13 @@ urlpatterns = [
         path('address/<str:pk>/detail', views.AddressDetailAPIView.as_view(), name='address-detail'),
         path('address/<str:pk>/edit', views.AddressUpdateAPIView.as_view(), name='address-update'),
         path('address/<str:pk>/delete', views.AddressDeleteAPIView.as_view(), name='address-delete'),
+
+        #admin
+        path('admin/address/list', admin_views.AddressListAPIView.as_view(), name='address-list'),
+        path('admin/address/create', admin_views.AddressCreateAPIView.as_view(), name='address-create'),
+        path('admin/address/<str:pk>/detail', admin_views.AddressDetailAPIView.as_view(), name='address-detail'),
+        path('admin/address/<str:pk>/edit', admin_views.AddressUpdateAPIView.as_view(), name='address-update'),
+        path('admin/address/<str:pk>/delete', admin_views.AddressDeleteAPIView.as_view(), name='address-delete'),
         # path('user/group/create', views.UserGroupCreateAPIView.as_view(), name='user-group-create'),
         # path('category/<str:slug>/detail', views.CategoryDetailAPIView.as_view(), name='category-detail'),
         # path('products/list', views.ProductListAPIView.as_view(), name='product-list'),

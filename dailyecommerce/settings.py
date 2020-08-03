@@ -193,9 +193,9 @@ CORS_ORIGIN_WHITELIST = [
 
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
-      'Basic': {
-            'type': 'basic'
-      },
+      # 'Basic': {
+      #       'type': 'basic'
+      # },
       'Token': {
             'type': 'apiKey',
             'name': 'Authorization',

@@ -151,7 +151,7 @@ class AddressDeleteAPIView(RetrieveUpdateAPIView):
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
 
-    def patch(self, request, pk, *args, **kwargs):
+    def delete(self, request, pk):
         try:
             address_obj = Address.objects.get(id=pk)
         except Exception as e:

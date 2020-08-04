@@ -255,6 +255,7 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = (
+            "id",
             "user",
             "name",
             "company_name",

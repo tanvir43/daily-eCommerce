@@ -111,7 +111,7 @@ class CategoryListSerializer(ModelSerializer):
     # sub_category = SerializerMethodField()
     # parent = PrimaryKeyRelatedField(queryset=Category.objects.filter(parent=None))
     sub_category = RecursiveSerializer(many=True, read_only=True)
-    products = ProductListSerializer(many=True)
+    # products = ProductListSerializer(many=True)
     # products = ProductTestSerializer(source='product.all', many=True)
 
     # def get_parent(self, instance):
@@ -130,7 +130,7 @@ class CategoryListSerializer(ModelSerializer):
             'background_image',
             'background_image_alt',
             'sub_category',
-            'products'
+            # 'products'
         )
 
     # def get_products(self, obj):
@@ -152,6 +152,7 @@ class CategoryListSerializer(ModelSerializer):
 
 class CategoryDetailSerializer(ModelSerializer):
     sub_category = SerializerMethodField()
+    parent = SerializerMethodField()
 
     class Meta:
         model = Category
@@ -162,13 +163,17 @@ class CategoryDetailSerializer(ModelSerializer):
             'description',
             'background_image',
             'background_image_alt',
-            'sub_category'
+            'sub_category',
+            'parent'
         ]
 
     def get_sub_category(self, obj):
         if obj.is_parent:
             return CategoryChildSerializer(obj.sub_category, many=True).data
         return None
+
+    def get_parent(self, obj):
+        return obj.parent.name
 
 
 class ProductDetailSerializer(ModelSerializer):

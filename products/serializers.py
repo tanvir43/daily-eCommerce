@@ -218,8 +218,10 @@ class OrderItemSerializer(ModelSerializer):
 
     def get_image(self, obj):
         request = self.context.get('request')
-        photo_url = obj.product.image.url
-        return request.build_absolute_uri(photo_url)
+        if obj.product.image:
+            photo_url = obj.product.image.url
+            return request.build_absolute_uri(photo_url)
+        return None
 
     def get_unit(self, obj):
         return obj.product.unit.name

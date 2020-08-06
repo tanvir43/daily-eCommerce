@@ -17,10 +17,10 @@ class OrderSerializer(ModelSerializer):
     billing_address = AddressSerializer()
     email = SerializerMethodField()
     order_items = OrderItemSerializer(many=True, read_only=True)
-    total_amount = serializers.SerializerMethodField()
+    # total_amount = serializers.SerializerMethodField()
 
-    def get_total_amount(self, obj):
-        return obj.get_total()
+    # def get_total_amount(self, obj):
+    #     return obj.get_total()
 
     def get_email(self, obj):
         return obj.user.email

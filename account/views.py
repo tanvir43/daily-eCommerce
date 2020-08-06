@@ -81,10 +81,10 @@ class UserGroupCreateAPIView(CreateAPIView):
     serializer_class = UserGroupSerializer
 
 
-class AddressListAPIView(ListAPIView):
-    queryset = Address.objects.filter(deleted=False)
-    serializer_class = AddressSerializer
-    permission_classes = (AllowAny,)
+# class AddressListAPIView(ListAPIView):
+#     queryset = Address.objects.filter(deleted=False)
+#     serializer_class = AddressSerializer
+#     permission_classes = (AllowAny,)
 
 
 class AddressListAPIView(ListAPIView):

@@ -34,6 +34,7 @@ class Order(DateTimeModel):
     token = models.CharField(max_length=36, unique=True, blank=True, null=True)
     # Token of a checkout instance that this order was created from
     checkout_token = models.CharField(max_length=36, blank=True, null=True)
+    total_amount = models.DecimalField(decimal_places=2, max_digits=15)
 
     def __str__(self):
         return self.status

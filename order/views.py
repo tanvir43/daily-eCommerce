@@ -60,6 +60,15 @@ class OrderCreateAPIView(CreateAPIView):
         order_data['user'] = request.user.id
         print("order data", order_data)
         address_id = order_data['address_id']
+        payment_method = order_data['payment_method']
+        if payment_method == "cash":
+            payment = Payment.objects.create(
+                user=user,
+                payment_method=payment_method,
+                amount=order_data['total_amount']
+            )
+        else:
+            pass
         try:
             address = Address.objects.get(id=address_id)
         except Exception as e:
@@ -70,7 +79,8 @@ class OrderCreateAPIView(CreateAPIView):
                 shipping_address=address,
                 billing_address=address,
                 currency="BDT",
-                total_amount=order_data['total_amount']
+                total_amount=order_data['total_amount'],
+                payment=payment
             )
         # serializer = self.serializer_class(data=order_data)
         # serializer.is_valid(raise_exception=True)

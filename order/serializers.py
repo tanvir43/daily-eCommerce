@@ -9,13 +9,21 @@ from rest_framework.serializers import (
 from account.serializers import AddressSerializer
 from products.serializers import OrderItemSerializer
 
-from .models import Order
+from .models import Order, Payment
+
+
+class PaymentSerializer(ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
 
 
 class OrderSerializer(ModelSerializer):
     shipping_address = AddressSerializer()
     billing_address = AddressSerializer()
+    payment = PaymentSerializer()
     email = SerializerMethodField()
+    # payment_method_name = SerializerMethodField()
     order_items = OrderItemSerializer(many=True, read_only=True)
     # total_amount = serializers.SerializerMethodField()
 
@@ -24,6 +32,9 @@ class OrderSerializer(ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email
+
+    # def get_payment_method_name(self, obj):
+    #     return obj.payment.payment_method
 
     class Meta:
         model = Order
@@ -39,5 +50,6 @@ class OrderSerializer(ModelSerializer):
             "billing_address",
             "email",
             "order_items",
-            "total_amount"
+            "total_amount",
+            "payment"
         )

@@ -27,8 +27,9 @@ class OrderListAPIView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
+        context = {'request': request}
         order = Order.objects.filter(user=user).order_by('-created_at')
-        serializer = self.serializer_class(order, many=True)
+        serializer = self.serializer_class(order, many=True, context=context)
         return Response(serializer.data)
 
 

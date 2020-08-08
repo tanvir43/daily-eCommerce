@@ -44,7 +44,8 @@ class OrderDetailAPIView(RetrieveAPIView):
         except Exception as e:
             return Response({"error": "Order not found"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer = self.serializer_class(order)
+            context = {'request': request}
+            serializer = self.serializer_class(order, context=context)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 

@@ -8,7 +8,7 @@ class OrderStatus:
     FULFILLED = "fulfilled"  # order with all items marked as fulfilled
     PLACED = "placed" # order placed
     COMPLETED = "completed"  # order completed
-    CANCELED = "canceled"  # permanently canceled order
+    CANCELED = "cancelled"  # permanently canceled order
 
     CHOICES = [
         (DRAFT, "Draft"),

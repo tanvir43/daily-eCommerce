@@ -141,12 +141,15 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
         except Exception as e:
             return Response({"error": "Order not found"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            order.status = data['status']
-            if data['status'] == 'cancelled':
-                order.cancelled_by = user
-                order.save()
-                return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
-            else:
-                order.updated_by = user
-                order.save()
-                return Response({"status": f"Updated Order status to {order.status} successfully"}, status=status.HTTP_200_OK)
+            if order:
+                # order_items = Order.objects.prefeth_related('order_items').all()
+                # print("order items", order_items)
+                order.status = data['status']
+                if data['status'] == 'cancelled':
+                    order.cancelled_by = user
+                    order.save()
+                    return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+                else:
+                    order.updated_by = user
+                    order.save()
+                    return Response({"status": f"Updated Order status to {order.status} successfully"}, status=status.HTTP_200_OK)

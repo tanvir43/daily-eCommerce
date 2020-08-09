@@ -128,16 +128,25 @@ class OrderCreateAPIView(CreateAPIView):
         # product_ids = self.request['product_ids']
 
 
-class OrderCancelAPI(RetrieveUpdateAPIView):
+class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self, pk):
-        return Order.objects.get(pk=pk)
-
     def patch(self, request, pk):
-        order = self.get_object(pk=pk)
-        serializer = self.serializer_class(order, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        return Response(status=status.HTTP_200_OK)
+        user = request.user
+        data = request.data
+        try:
+            order = Order.objects.get(id=pk)
+        except Exception as e:
+            return Response({"error": "Order not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            order.status = data['status']
+            if data['status'] == 'cancelled':
+                order.cancelled_by = user
+                order.save()
+                return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+            else:
+                order.updated_by = user
+                order.save()
+                return Response({"status": f"Updated Order status to {order.status} successfully"}, status=status.HTTP_200_OK)

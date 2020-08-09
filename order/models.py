@@ -12,6 +12,7 @@ from commons.choices import OrderStatus
 
 class Order(DateTimeModel):
     user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
+    cancelled_by = models.ForeignKey(User, related_name="cancelled_orders", on_delete=models.CASCADE)
     status = models.CharField(
         max_length=32, default=OrderStatus.PENDING, choices=OrderStatus.CHOICES
     )

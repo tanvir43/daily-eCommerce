@@ -1,3 +1,5 @@
+from commons.decorator import query_debugger
+
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -133,6 +135,7 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
 
+    @query_debugger
     def patch(self, request, pk):
         user = request.user
         data = request.data
@@ -142,14 +145,21 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
             return Response({"error": "Order not found"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             if order:
-                # order_items = Order.objects.prefeth_related('order_items').all()
-                # print("order items", order_items)
-                order.status = data['status']
                 if data['status'] == 'cancelled':
-                    order.cancelled_by = user
-                    order.save()
-                    return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+                    if order.status != 'cancelled':
+                        # order_items = Order.objects.select_related('order_items').all()
+                        order_items = Order.objects.all()
+                        print("order items", order_items)
+                        for item in order.order_items.all():
+                            item.product.stock += item.quantity
+                        order.status = data['status']
+                        order.cancelled_by = user
+                        order.save()
+                        return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({"status": "This order already cancelled"}, status=status.HTTP_200_OK)
                 else:
+                    order.status = data['status']
                     order.updated_by = user
                     order.save()
                     return Response({"status": f"Updated Order status to {order.status} successfully"}, status=status.HTTP_200_OK)

@@ -6,9 +6,9 @@ class OrderStatus:
         "partially fulfilled"  # order with some items marked as fulfilled
     )
     FULFILLED = "fulfilled"  # order with all items marked as fulfilled
-    PLACED = "placed" # order placed
+    PLACED = "placed"  # order placed
     COMPLETED = "completed"  # order completed
-    CANCELED = "cancelled"  # permanently canceled order
+    CANCELLED = "cancelled"  # permanently canceled order
 
     CHOICES = [
         (DRAFT, "Draft"),
@@ -18,7 +18,7 @@ class OrderStatus:
         (FULFILLED, "Fulfilled"),
         (PLACED, "Placed"),
         (COMPLETED, "Completed"),
-        (CANCELED, "Canceled"),
+        (CANCELLED, "Cancelled"),
     ]
 
 

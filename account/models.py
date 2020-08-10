@@ -141,7 +141,7 @@ class User(AbstractUser):
 
         This string is used when a `User` is printed in the console.
         """
-        return self.email, self.pk
+        return self.email
 
     @property
     def token(self):

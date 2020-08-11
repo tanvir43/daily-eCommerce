@@ -31,6 +31,10 @@ class Category(DateTimeModel):
         upload_to="category-backgrounds", blank=True, null=True
     )
     background_image_alt = models.CharField(max_length=128, blank=True)
+    created_by = models.ForeignKey(User,
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
     objects = CategoryManager
     # tree = TreeManager()
 
@@ -57,6 +61,10 @@ class Category(DateTimeModel):
 class Unit(models.Model):
     name = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(max_length=30)
+    created_by = models.ForeignKey(User,
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -104,10 +112,14 @@ class Product(DateTimeModel):
     image_alt = models.CharField(max_length=128, blank=True, verbose_name="Image Alt")
     # updated_at = models.DateTimeField(auto_now=True, null=True)
     charge_taxes = models.BooleanField(default=True ,verbose_name='Charge Taxes')
-    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     count_sold = models.BigIntegerField(default=0, verbose_name='Count Sold')
     discount_price = models.FloatField(blank=True, null=True)
     quantity = models.IntegerField()
+    created_by = models.ForeignKey(User,
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )

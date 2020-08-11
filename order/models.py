@@ -16,8 +16,8 @@ class Order(DateTimeModel):
         User,
         related_name="cancelled_orders",
         on_delete=models.CASCADE,
-        # null=True,
-        # blank=True
+        null=True,
+        blank=True
     )
     status = models.CharField(
         max_length=32, default=OrderStatus.PENDING, choices=OrderStatus.CHOICES

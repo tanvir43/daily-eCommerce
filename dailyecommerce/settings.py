@@ -13,6 +13,8 @@ import dj_database_url
 
 import os
 
+from decouple import config
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ty@*&-yvu759_b9n6(%_ozn_#jb-wn)f$ggp79@a@6o72zstqc'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=True)
 
 ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','localhost', 'http://127.0.0.1:3000']
 
@@ -99,11 +101,11 @@ WSGI_APPLICATION = 'dailyecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myecommerze',
-        'USER': 'tanvir',
-        'PASSWORD': 'myecommerze1001openit',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': config('DB_NAME'),  #'myecommerze',
+        'USER': config('DB_USER'), #'tanvir',
+        'PASSWORD': config('DB_PASS'), #'myecommerze1001openit',
+        'HOST': config('DB_HOST'), #'localhost',
+        'PORT': config('DB_PORT'), #'',
     }
 }
 
@@ -205,7 +207,7 @@ SWAGGER_SETTINGS = {
 }
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'saddhosaddho@gmail.com'
-EMAIL_HOST_PASSWORD = ')(*!@#poiqwe'
-EMAIL_PORT = 587
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)

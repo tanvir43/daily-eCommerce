@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = ['dailyecommerce.herokuapp.com','localhost', 'http://127.0.0.1:3000']
+ALLOWED_HOSTS = ['167.71.234.250','dailyecommerce.herokuapp.com','localhost', 'http://127.0.0.1:3000']
 
 
 # Application definition

@@ -91,12 +91,10 @@ class UserRegistrationAPIView(CreateAPIView):
         )
         email.send()
         status_code = status.HTTP_201_CREATED
-        # response = {
-        #     'success': 'True',
-        #     'status_code': status_code,
-        #     'message': 'Successfully registered'
-        # }
-        return Response(serializer.data, status=status_code)
+        response = {
+            'success': 'An activation link is sent to your email',
+        }
+        return Response(response, status=status_code)
 
 
 class UserRoleCreateAPIView(CreateAPIView):
@@ -197,7 +195,7 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
+        user.approved = True
         user.save()
         # login(request, user)
         # return redirect('home')

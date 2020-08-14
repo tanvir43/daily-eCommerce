@@ -12,6 +12,10 @@ urlpatterns = [
         path('address/<str:pk>/edit', views.AddressUpdateAPIView.as_view(), name='address-update'),
         path('address/<str:pk>/delete', views.AddressDeleteAPIView.as_view(), name='address-delete'),
 
+        # path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        # views.activate, name='activate'),
+        path('activate/<str:uidb64>/<str:token>/$',views.activate, name='activate'),
+
         #admin
         path('admin/address/list', admin_views.AddressListAPIView.as_view(), name='address-list'),
         path('admin/address/create', admin_views.AddressCreateAPIView.as_view(), name='address-create'),

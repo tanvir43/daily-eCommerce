@@ -110,7 +110,7 @@ class User(AbstractUser):
     # letting them delete it. That way they won't show up on the site anymore,
     # but we can still analyze the data.
     phone = PhoneNumberField(unique=True, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    approved = models.BooleanField(default=False)
 
     # The `is_staff` flag is expected by Django to determine who can and cannot
     # log into the Django admin site. For most users this flag will always be

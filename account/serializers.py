@@ -107,6 +107,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            'id',
             'groups',
             'roles',
             # 'permission',
@@ -168,6 +169,7 @@ class UserLoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
+    approved = serializers.BooleanField(read_only=True)
 
     def create(self, data):
         # The `validate` method is where we make sure that the current
@@ -226,7 +228,8 @@ class UserLoginSerializer(serializers.Serializer):
         return {
             # 'username': user.username,
             'email': user.email,
-            'token': user.token
+            'token': user.token,
+            'approved': user.approved
         }
 
 

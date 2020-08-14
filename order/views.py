@@ -106,10 +106,7 @@ class OrderCreateAPIView(CreateAPIView):
                                         ordered=True,
                                         quantity=item['quantity'],
                                     )
-                                    # product.stock -= item['quantity']
-                                    # product.save()
-                                    # order_item.save()
-                                    # order_item.order.add(order)
+                                    product.stock -= item['quantity']
                                 else:
                                     order_item = OrderItem(
                                         user=user,
@@ -117,7 +114,7 @@ class OrderCreateAPIView(CreateAPIView):
                                         ordered=True,
                                         quantity=1,
                                     )
-                                product.stock -= item['quantity']
+                                    product.stock -= 1
                                 product.save()
                                 order.save()
                                 order_item.save()

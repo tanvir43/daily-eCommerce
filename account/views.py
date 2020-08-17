@@ -68,7 +68,7 @@ class UserRegistrationAPIView(CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UserRegistrationSerializer
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         print("DATA SHAK", request.data)
         data = request.data
         serializer = self.serializer_class(data=data)

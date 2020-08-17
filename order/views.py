@@ -143,18 +143,21 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
         else:
             if order:
                 if data['status'] == 'cancelled':
-                    if order.status != 'cancelled':
-                        # order_items = Order.objects.select_related('order_items').all()
-                        order_items = Order.objects.all()
-                        print("order items", order_items)
-                        for item in order.order_items.all():
-                            item.product.stock += item.quantity
-                        order.status = data['status']
-                        order.cancelled_by = user
-                        order.save()
-                        return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+                    if order.status == 'accepted':
+                        return Response({"status": "Order already accepted, can not cancel now"}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"status": "This order already cancelled"}, status=status.HTTP_200_OK)
+                        if order.status != 'cancelled' or order.status != 'completed':
+                            # order_items = Order.objects.select_related('order_items').all()
+                            order_items = Order.objects.all()
+                            print("order items", order_items)
+                            for item in order.order_items.all():
+                                item.product.stock += item.quantity
+                            order.status = data['status']
+                            order.cancelled_by = user
+                            order.save()
+                            return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({"status": f"This order already {order.status}"}, status=status.HTTP_200_OK)
                 else:
                     order.status = data['status']
                     order.updated_by = user

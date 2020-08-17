@@ -9,10 +9,12 @@ class OrderStatus:
     PLACED = "placed"  # order placed
     COMPLETED = "completed"  # order completed
     CANCELLED = "cancelled"  # permanently canceled order
+    ACCEPTED = "accepted"  # permanently canceled order
 
     CHOICES = [
         (DRAFT, "Draft"),
-        (PENDING, "pending"),
+        (ACCEPTED, "Accepted"),
+        (PENDING, "Pending"),
         (UNFULFILLED, "Unfulfilled"),
         (PARTIALLY_FULFILLED, "Partially fulfilled"),
         (FULFILLED, "Fulfilled"),

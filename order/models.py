@@ -102,6 +102,9 @@ class Refund(DateTimeModel):
 
 class DeliveryCharge(DateTimeModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    charge_range = models.DecimalField(max_digits=10,
+                                       decimal_places=2,
+                                       null=True, blank=True)
     created_by = models.ForeignKey(User,
                                    related_name='delivery_charges',
                                    on_delete=models.CASCADE)

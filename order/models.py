@@ -11,7 +11,7 @@ from commons.choices import OrderStatus
 
 
 class Order(DateTimeModel):
-    user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="orders_users", on_delete=models.CASCADE)
     cancelled_by = models.ForeignKey(
         User,
         related_name="cancelled_orders",
@@ -44,7 +44,12 @@ class Order(DateTimeModel):
     # Token of a checkout instance that this order was created from
     checkout_token = models.CharField(max_length=36, blank=True, null=True)
     total_amount = models.DecimalField(decimal_places=2, max_digits=15)
-    delivered_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+    delivered_on = models.DateTimeField(editable=True, null=True, blank=True)
+    updated_by = models.ForeignKey(User,
+                                   on_delete=models.CASCADE,
+                                   related_name='order_updated',
+                                   null=True,
+                                   blank=True)
 
     def __str__(self):
         return self.status
@@ -64,12 +69,20 @@ class Order(DateTimeModel):
 
 
 class Payment(DateTimeModel):
-    user = models.ForeignKey(
-        User, on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(User,
+                             on_delete=models.SET_NULL,
+                             related_name='user_payments',
+                             blank=True,
+                             null=True)
     payment_method = models.CharField(max_length=100)
     payment_via = models.CharField(max_length=100, null=True, blank=True)
     trxid = models.CharField(max_length=256, null=True, blank=True)
     amount = models.FloatField()
+    updated_by = models.ForeignKey(User,
+                                   on_delete=models.CASCADE,
+                                   related_name='payment_updated_by',
+                                   null=True,
+                                   blank=True)
 
     def __str__(self):
         return self.payment_method
@@ -78,7 +91,12 @@ class Payment(DateTimeModel):
 class Coupon(DateTimeModel):
     code = models.CharField(max_length=15) #Todo may the `code` should be unique
     amount = models.FloatField()
-    user = models.ForeignKey(User, related_name='coupons', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='users', on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(User,
+                                   on_delete=models.CASCADE,
+                                   related_name='coupon_updated_by',
+                                   null=True,
+                                   blank=True)
 
     class Meta:
         unique_together = [['code', 'user']]
@@ -106,8 +124,13 @@ class DeliveryCharge(DateTimeModel):
                                        decimal_places=2,
                                        null=True, blank=True)
     created_by = models.ForeignKey(User,
-                                   related_name='delivery_charges',
+                                   related_name='delivery_charge_created_by',
                                    on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(User,
+                                   on_delete=models.CASCADE,
+                                   related_name='delivery_charge_updated_by',
+                                   null=True,
+                                   blank=True)
 
     def __str__(self):
         return f"{self.amount}"

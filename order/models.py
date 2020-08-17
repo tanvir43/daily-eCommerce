@@ -38,6 +38,8 @@ class Order(DateTimeModel):
     received = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
+    return_requested = models.BooleanField(default=False)
+    return_granted = models.BooleanField(default=False)
     token = models.CharField(max_length=36, unique=True, blank=True, null=True)
     # Token of a checkout instance that this order was created from
     checkout_token = models.CharField(max_length=36, blank=True, null=True)
@@ -72,19 +74,36 @@ class Payment(DateTimeModel):
         return self.payment_method
 
 
-class Coupon(models.Model):
+class Coupon(DateTimeModel):
     code = models.CharField(max_length=15) #Todo may the `code` should be unique
     amount = models.FloatField()
+    user = models.ForeignKey(User, related_name='coupons', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = [['code', 'user']]
 
     def __str__(self):
         return self.code
 
 
-class Refund(models.Model):
+class Refund(DateTimeModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     reason = models.TextField()
     accepted = models.BooleanField(default=False)
     email = models.EmailField()
+    refund_by = models.ForeignKey(User,
+                                  related_name='refunds',
+                                  on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.pk}"
+
+
+class DeliveryCharge(DateTimeModel):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_by = models.ForeignKey(User,
+                                   related_name='delivery_charges',
+                                   on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.amount}"

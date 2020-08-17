@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='coupon',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=1),
+            field=models.DateTimeField(auto_now_add=True, default="2020-03-03"),
             preserve_default=False,
         ),
         migrations.AddField(
@@ -48,13 +48,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='refund',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=1),
+            field=models.DateTimeField(auto_now_add=True, default="2020-03-03"),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='refund',
             name='refund_by',
-            field=models.ForeignKey(default='a', on_delete=django.db.models.deletion.CASCADE, related_name='refunds', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='refunds', to=settings.AUTH_USER_MODEL),
             preserve_default=False,
         ),
         migrations.AddField(

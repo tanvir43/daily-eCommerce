@@ -146,7 +146,11 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
                     if order.status == 'accepted':
                         return Response({"status": "Order already accepted, can not cancel now"}, status=status.HTTP_200_OK)
                     else:
-                        if order.status != 'cancelled' or order.status != 'completed':
+                        if order.status == 'cancelled':
+                            return Response({"status": "This order already cancelled"}, status=status.HTTP_200_OK)
+                        elif order.status == 'completed':
+                            return Response({"status": "This order already completed"}, status=status.HTTP_200_OK)
+                        else:
                             # order_items = Order.objects.select_related('order_items').all()
                             order_items = Order.objects.all()
                             print("order items", order_items)
@@ -156,8 +160,6 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
                             order.cancelled_by = user
                             order.save()
                             return Response({"status": "Order cancelled successfully"}, status=status.HTTP_200_OK)
-                        else:
-                            return Response({"status": f"This order already {order.status}"}, status=status.HTTP_200_OK)
                 else:
                     order.status = data['status']
                     order.updated_by = user

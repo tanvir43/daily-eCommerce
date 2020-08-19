@@ -119,7 +119,7 @@ class Refund(DateTimeModel):
 
 
 class DeliveryCharge(DateTimeModel):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    delivery_charge = models.DecimalField(max_digits=10, decimal_places=2)
     charge_range = models.DecimalField(max_digits=10,
                                        decimal_places=2,
                                        null=True, blank=True)
@@ -136,4 +136,4 @@ class DeliveryCharge(DateTimeModel):
                                    blank=True)
 
     def __str__(self):
-        return f"{self.amount}"
+        return f"{self.delivery_charge}"

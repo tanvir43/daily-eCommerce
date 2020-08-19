@@ -9,13 +9,23 @@ from rest_framework.serializers import (
 from account.serializers import AddressSerializer
 from products.serializers import OrderItemSerializer
 
-from .models import Order, Payment
+from .models import Order, Payment, DeliveryCharge
 
 
 class PaymentSerializer(ModelSerializer):
     class Meta:
         model = Payment
         fields = "__all__"
+
+
+class DeliveryChargeSerializer(ModelSerializer):
+    class Meta:
+        model = DeliveryCharge
+        fields = (
+            'delivery_charge',
+            'charge_range',
+            'flat_discount'
+        )
 
 
 class OrderSerializer(ModelSerializer):

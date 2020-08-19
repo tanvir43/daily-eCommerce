@@ -13,11 +13,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from products.models import Product ,OrderItem
+from products.models import Product, OrderItem
 from account.models import User, Address
 
-from .models import Order, Payment, Coupon
-from .serializers import OrderSerializer
+from .models import Order, Payment, Coupon, DeliveryCharge
+from .serializers import OrderSerializer, DeliveryChargeSerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -165,3 +165,28 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
                     order.updated_by = user
                     order.save()
                     return Response({"status": f"Updated Order status to {order.status} successfully"}, status=status.HTTP_200_OK)
+
+
+class GetDeliveryChargeWithDiscount(ListAPIView):
+    queryset = DeliveryCharge.objects.all()
+    serializer_class = DeliveryChargeSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        total_amount = float(kwargs['amount'])
+        print("order total amount", total_amount)
+        delivery_charge = self.queryset
+        serializer = self.serializer_class(delivery_charge[0])
+        delivery_charge_res = {}
+        if delivery_charge[0].charge_range:
+            if delivery_charge[0].charge_range > 0.00:
+                print("HEre")
+                if total_amount < delivery_charge[0].charge_range:
+                    print("now herE")
+                    delivery_charge_res['delivery_charge'] = 30.00
+                else:
+                    delivery_charge_res['delivery_charge'] = 0.00
+                delivery_charge_res['charge_range'] = delivery_charge[0].charge_range
+                delivery_charge_res['flat_discount'] = delivery_charge[0].flat_discount
+                return Response(delivery_charge_res)
+        return Response(serializer.data)

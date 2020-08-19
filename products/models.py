@@ -28,13 +28,14 @@ class Category(DateTimeModel):
         "self", null=True, blank=True, related_name="sub_category", on_delete=models.CASCADE
     )
     background_image = models.ImageField(
-        upload_to="category-backgrounds", blank=True, null=True
+        upload_to="category-backgrounds"
     )
     background_image_alt = models.CharField(max_length=128, blank=True)
     created_by = models.ForeignKey(User,
                                    null=True,
                                    blank=True,
                                    on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
     objects = CategoryManager
     # tree = TreeManager()
 
@@ -108,7 +109,7 @@ class Product(DateTimeModel):
     available = models.BooleanField(default=True)
     stock = models.PositiveIntegerField()
     # created_at = models.DateTimeField(auto_now_add=True)
-    image = models.FileField(upload_to="product-images", blank=True, null=True)
+    image = models.FileField(upload_to="product-images")
     image_alt = models.CharField(max_length=128, blank=True, verbose_name="Image Alt")
     # updated_at = models.DateTimeField(auto_now=True, null=True)
     charge_taxes = models.BooleanField(default=True ,verbose_name='Charge Taxes')
@@ -120,6 +121,7 @@ class Product(DateTimeModel):
                                    null=True,
                                    blank=True,
                                    on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )

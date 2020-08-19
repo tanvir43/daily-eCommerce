@@ -123,6 +123,9 @@ class DeliveryCharge(DateTimeModel):
     charge_range = models.DecimalField(max_digits=10,
                                        decimal_places=2,
                                        null=True, blank=True)
+    flat_discount = models.DecimalField(max_digits=10,
+                                        decimal_places=2,
+                                        null=True, blank=True)
     created_by = models.ForeignKey(User,
                                    related_name='delivery_charge_created_by',
                                    on_delete=models.CASCADE)

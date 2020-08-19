@@ -25,7 +25,8 @@ from products.serializers import (
     )
 from .pagination import (
     ProductLimitOffsetPagination,
-    ProductPageNumberPagination
+    ProductPageNumberPagination,
+    CustomPaginator
     )
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -101,13 +102,17 @@ class ProductUnderCategoryListView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     permission_classes = (AllowAny,)
+    pagination_class = CustomPaginator #ProductPageNumberPagination
     # lookup_field = "slug"
 
     def get(self, request, slug):
         product = Product.objects.filter(category__slug=slug)
         print("aaa", product)
-        serializer = ProductDetailSerializer(product, many=True)
-        return Response(serializer.data)
+        paginator = self.pagination_class()
+        response = paginator.generate_response(product, ProductDetailSerializer, request)
+        # serializer = ProductDetailSerializer(product, many=True)
+        # return Response(self.pagination_class(serializer.data))
+        return response
 
 
 class UnitListAPIView(ListAPIView):

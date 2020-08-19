@@ -77,3 +77,22 @@ class ProductPageNumberPagination(PageNumberPagination):
                 'limit': self.page_size,
                 'results': []
             })
+
+
+class CustomPaginator(PageNumberPagination):
+    page_size = 10 # Number of objects to return in one page
+
+    def generate_response(self, query_set, serializer_obj, request):
+        try:
+            page_data = self.paginate_queryset(query_set, request)
+        except Exception:
+            return Response({
+                'next': "null", #self.get_next_link(),
+                'previous': "null", #self.get_previous_link(),
+                'count': 0,
+                'limit': 0,
+                'results': []
+            })
+            # return Response({"error": "No results found for the requested page"}, status=status.HTTP_400_BAD_REQUEST)
+        serialized_page = serializer_obj(page_data, many=True)
+        return self.get_paginated_response(serialized_page.data)

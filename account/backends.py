@@ -8,7 +8,7 @@ from .models import User
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
-    authentication_header_prefix = 'Token'
+    authentication_header_prefix = 'bearer'
 
     def authenticate(self, request):
         """

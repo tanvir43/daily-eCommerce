@@ -168,25 +168,42 @@ class OrderStatusUpdateAPI(RetrieveUpdateAPIView):
 
 
 class GetDeliveryChargeWithDiscount(ListAPIView):
-    queryset = DeliveryCharge.objects.all()
+    # queryset = DeliveryCharge.objects.all() #(city="Dhaka") # Need to make it dynamic
     serializer_class = DeliveryChargeSerializer
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         total_amount = float(kwargs['amount'])
+        city = kwargs['city']
         print("order total amount", total_amount)
-        delivery_charge = self.queryset
-        serializer = self.serializer_class(delivery_charge[0])
-        delivery_charge_res = {}
-        if delivery_charge[0].charge_range:
-            if delivery_charge[0].charge_range > 0.00:
-                print("HEre")
-                if total_amount < delivery_charge[0].charge_range:
-                    print("now herE")
+        delivery_charge = DeliveryCharge.objects.get(city=city) # Need to make it dynamic
+        # delivery_charge = self.queryset
+        charge_range = delivery_charge.charge_range
+        flat_discount = delivery_charge.flat_discount
+        delivery_charge = delivery_charge.delivery_charge
+        serializer = self.serializer_class(delivery_charge)
+        delivery_charge_res = {'discount_in_percent': flat_discount}
+        if charge_range:
+            if charge_range > 0.00:
+                if total_amount < charge_range:
                     delivery_charge_res['delivery_charge'] = 30.00
+                elif total_amount == charge_range:
+                    delivery_charge_res['delivery_charge'] = 0.00
                 else:
                     delivery_charge_res['delivery_charge'] = 0.00
-                delivery_charge_res['charge_range'] = delivery_charge[0].charge_range
-                delivery_charge_res['flat_discount'] = delivery_charge[0].flat_discount
+                delivery_charge_res['charge_range'] = charge_range
+                delivery_charge_res['discount'] = (total_amount * flat_discount/100)
+                print("discount", delivery_charge_res['discount'])
+                print("delivery charge", delivery_charge_res['delivery_charge'])
+                print("tot amount", total_amount)
+                print("sum", total_amount + float(delivery_charge))
+                final_amount = (total_amount + float(delivery_charge_res['delivery_charge'])) - delivery_charge_res['discount']
+                print("final amount", final_amount)
+                delivery_charge_res['final_amount'] = final_amount
                 return Response(delivery_charge_res)
-        return Response(serializer.data)
+        delivery_charge_res['delivery_charge'] = delivery_charge
+        delivery_charge_res['charge_range'] = charge_range
+        delivery_charge_res['discount'] = (total_amount * flat_discount/100)
+        final_amount = (total_amount + float(delivery_charge_res['delivery_charge'])) - delivery_charge_res['discount']
+        delivery_charge_res['final_amount'] = final_amount
+        return Response(delivery_charge_res)

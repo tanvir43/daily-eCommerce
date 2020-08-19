@@ -5,7 +5,7 @@ from django.db import models
 from account.models import User, Address
 
 from commons.abstract import DateTimeModel
-from commons.choices import OrderStatus
+from commons.choices import OrderStatus, Divisions
 
 # Create your models here.
 
@@ -123,9 +123,11 @@ class DeliveryCharge(DateTimeModel):
     charge_range = models.DecimalField(max_digits=10,
                                        decimal_places=2,
                                        null=True, blank=True)
-    flat_discount = models.DecimalField(max_digits=10,
-                                        decimal_places=2,
-                                        null=True, blank=True)
+    flat_discount = models.IntegerField(default=0, verbose_name="discount percentage")
+    discount_range = models.DecimalField(max_digits=10,
+                                         decimal_places=2,
+                                         null=True, blank=True)
+    city = models.CharField(max_length=100, default=Divisions.DHAKA, choices=Divisions.CHOICES)
     created_by = models.ForeignKey(User,
                                    related_name='delivery_charge_created_by',
                                    on_delete=models.CASCADE)

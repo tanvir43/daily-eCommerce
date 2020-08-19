@@ -23,6 +23,16 @@ class OrderStatus:
         (CANCELLED, "Cancelled"),
     ]
 
+class Divisions:
+    DHAKA = "Dhaka"  # fully editable, not confirmed order created by staff users
+    CHATTRAGRAM = "Chattragram"  # fully editable, not confirmed order created by consumers
+    KHULNA = "Khulna"  # order with no items marked as fulfilled
+
+    CHOICES = [
+        (DHAKA, "Dhaka"),
+        (CHATTRAGRAM, "Chattagram"),
+        (KHULNA, "Khulna"),
+    ]
 
 class FulfillmentStatus:
     FULFILLED = "fulfilled"  # group of products in an order marked as fulfilled

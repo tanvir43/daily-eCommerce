@@ -102,6 +102,10 @@ class User(AbstractUser):
     # the user anyways, we will also use the email for logging in because it is
     # the most common form of login credential at the time of writing.
     email = models.EmailField(db_index=True, unique=True)
+    verification_code = models.CharField(max_length=100,
+                                         unique=True,
+                                         null=True,
+                                         blank=True)
 
     # When a user no longer wishes to use our platform, they may try to delete
     # their account. That's a problem for us because the data we collect is
@@ -134,6 +138,9 @@ class User(AbstractUser):
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
     # objects = UserManager()
+
+    class Meta:
+        unique_together = [['email', 'verification_code']]
 
     def __str__(self):
         """

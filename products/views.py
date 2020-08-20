@@ -102,17 +102,66 @@ class ProductUnderCategoryListView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     permission_classes = (AllowAny,)
-    pagination_class = CustomPaginator #ProductPageNumberPagination
+    pagination_class = ProductPageNumberPagination #CustomPaginator
     # lookup_field = "slug"
 
     def get(self, request, slug):
         product = Product.objects.filter(category__slug=slug)
-        print("aaa", product)
-        paginator = self.pagination_class()
-        response = paginator.generate_response(product, ProductDetailSerializer, request)
-        # serializer = ProductDetailSerializer(product, many=True)
-        # return Response(self.pagination_class(serializer.data))
-        return response
+        context = {'request': request}
+        page = self.paginate_queryset(product)
+        if page is not None:
+            serializer = ProductDetailSerializer(page, many=True, context=context)
+            return self.get_paginated_response(serializer.data)
+        # else:
+        #     return Response({
+        #         'next': "null",  # self.get_next_link(),
+        #         'previous': "null",  # self.get_previous_link(),
+        #         'count': 0,
+        #         'limit': 0,
+        #         'results': []
+        #     })
+        print("here s here")
+        serializer = ProductDetailSerializer(product, many=True, context=context)
+        return Response(serializer.data)
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+
+    # def get(self, request, slug):
+    #     product = Product.objects.filter(category__slug=slug)
+    #     context = {'request': request}
+    #     print("aaa", product)
+    #     paginator = self.pagination_class()
+    #     serializer = self.serializer_class(context=context)
+    #     # response = paginator.generate_response(product, serializer, request)
+    #     response = paginator.generate_response(product, ProductDetailSerializer, request)
+    #     # serializer = ProductDetailSerializer(product, many=True)
+    #     # return Response(self.pagination_class(serializer.data))
+    #     return response
 
 
 class UnitListAPIView(ListAPIView):

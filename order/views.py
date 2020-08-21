@@ -1,3 +1,4 @@
+from math import floor, ceil
 from commons.decorator import query_debugger
 
 from rest_framework.generics import (
@@ -174,9 +175,9 @@ class GetDeliveryChargeWithDiscount(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         total_amount = float(kwargs['amount'])
-        city = kwargs['city']
+        # city = kwargs['city']
         print("order total amount", total_amount)
-        delivery_charge = DeliveryCharge.objects.get(city=city) # Need to make it dynamic
+        delivery_charge = DeliveryCharge.objects.get(city="Dhaka") # Need to make it dynamic
         # delivery_charge = self.queryset
         charge_range = delivery_charge.charge_range
         flat_discount = delivery_charge.flat_discount
@@ -192,7 +193,7 @@ class GetDeliveryChargeWithDiscount(ListAPIView):
                 else:
                     delivery_charge_res['delivery_charge'] = 0.00
                 delivery_charge_res['charge_range'] = charge_range
-                delivery_charge_res['discount'] = (total_amount * flat_discount/100)
+                delivery_charge_res['discount'] = ceil(total_amount * flat_discount/100)
                 print("discount", delivery_charge_res['discount'])
                 print("delivery charge", delivery_charge_res['delivery_charge'])
                 print("tot amount", total_amount)
@@ -203,7 +204,7 @@ class GetDeliveryChargeWithDiscount(ListAPIView):
                 return Response(delivery_charge_res)
         delivery_charge_res['delivery_charge'] = delivery_charge
         delivery_charge_res['charge_range'] = charge_range
-        delivery_charge_res['discount'] = (total_amount * flat_discount/100)
+        delivery_charge_res['discount'] = ceil(total_amount * flat_discount/100)
         final_amount = (total_amount + float(delivery_charge_res['delivery_charge'])) - delivery_charge_res['discount']
         delivery_charge_res['final_amount'] = final_amount
         return Response(delivery_charge_res)

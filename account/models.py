@@ -201,6 +201,7 @@ class Address(DateTimeModel):
     phone = PhoneNumberField(max_length=256)
     area = models.CharField(max_length=256)
     deleted = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=True)
 
     # first_name = models.CharField(max_length=256, blank=True, null=True)
     # last_name = models.CharField(max_length=256, blank=True, null=True)
@@ -223,7 +224,9 @@ class Address(DateTimeModel):
     #     return "%s %s" % (self.first_name, self.last_name)
 
     def __str__(self):
-        return f"{self.city}, {self.pk}"
+        if self.is_default:
+            return f"Object: {self.pk}, User: {self.user.id}, {self.area}           >> Current Address"
+        return f"Object: {self.pk}, User: {self.user.id}, {self.area}"
 
     # def __eq__(self, other):
     #     if not isinstance(other, Address):

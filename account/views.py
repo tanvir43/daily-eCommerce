@@ -133,10 +133,18 @@ class AddressCreateAPIView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         user = request.user
+        if Address.objects.filter(is_default=True).exists():
+            address = Address.objects.get(is_default=True)
+            address.is_default = False
+            address.save()
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user)
-        return Response({'status': 'Address saved successfully'}, status=status.HTTP_201_CREATED)
+        response = {
+            "id": serializer.data['id'],
+            "status": "Address saved successfully"
+        }
+        return Response(response, status=status.HTTP_201_CREATED)
 
 
 class AddressDetailAPIView(RetrieveAPIView):
@@ -161,15 +169,24 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
 
     def patch(self, request, pk, *args, **kwargs):
         try:
-            address = Address.objects.get(id=pk)
+            current_address = Address.objects.get(id=pk)
         except Exception as e:
             return Response({"error": "Address not found"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             data = request.data
-            serializer = self.serializer_class(address, data=data, partial=True)
+            if 'is_default' in data and data['is_default']:
+                if Address.objects.filter(is_default=True).exists():
+                    previous_address = Address.objects.get(is_default=True)
+                    previous_address.is_default = False
+                    previous_address.save()
+            serializer = self.serializer_class(current_address, data=data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response({"status": "Successfully updated"}, status=status.HTTP_200_OK)
+            response = {
+                "id": serializer.data['id'],
+                "status": "Successfully updated"
+            }
+            return Response(response, status=status.HTTP_200_OK)
 
 
 class AddressDeleteAPIView(RetrieveUpdateAPIView):
@@ -178,14 +195,27 @@ class AddressDeleteAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request, pk):
+        user = request.user
         try:
-            address_obj = Address.objects.get(id=pk)
+            address = Address.objects.get(id=pk, deleted=False)
         except Exception as e:
             return Response({"error": "Address not found"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            address_obj.deleted = True
-            address_obj.save()
-            return Response({"status": "address deleted successfully"}, status=status.HTTP_200_OK)
+            user_address = Address.objects.filter(user=user, deleted=False)
+            if 0 < len(user_address) < 2:
+                address.deleted = True
+                address.is_default = False
+                address.save()
+                return Response({"status": "address deleted successfully"}, status=status.HTTP_200_OK)
+            else:
+                if address.is_default:
+                    return Response({"status": "As this is your current address, select another address as your current address to remove this address"},
+                                    status=status.HTTP_200_OK)
+                else:
+                    address.deleted = True
+                    address.save()
+                    return Response({"status": "address deleted successfully"}, status=status.HTTP_200_OK)
+
 
 
 def activate(request, uidb64, token):

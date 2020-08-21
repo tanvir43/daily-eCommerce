@@ -268,5 +268,6 @@ class AddressSerializer(serializers.ModelSerializer):
             "country",
             "phone",
             "area",
-            "deleted"
+            "deleted",
+            "is_default"
         )

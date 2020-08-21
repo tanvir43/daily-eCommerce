@@ -183,7 +183,7 @@ class GetDeliveryChargeWithDiscount(ListAPIView):
         flat_discount = delivery_charge.flat_discount
         delivery_charge = delivery_charge.delivery_charge
         serializer = self.serializer_class(delivery_charge)
-        delivery_charge_res = {'discount_in_percent': flat_discount}
+        delivery_charge_res = {'discount_in_percent': flat_discount, "initial_order_amount": total_amount}
         if charge_range:
             if charge_range > 0.00:
                 if total_amount < charge_range:
@@ -200,11 +200,11 @@ class GetDeliveryChargeWithDiscount(ListAPIView):
                 print("sum", total_amount + float(delivery_charge))
                 final_amount = (total_amount + float(delivery_charge_res['delivery_charge'])) - delivery_charge_res['discount']
                 print("final amount", final_amount)
-                delivery_charge_res['final_amount'] = final_amount
+                delivery_charge_res['final_order_amount'] = final_amount
                 return Response(delivery_charge_res)
         delivery_charge_res['delivery_charge'] = delivery_charge
         delivery_charge_res['charge_range'] = charge_range
         delivery_charge_res['discount'] = ceil(total_amount * flat_discount/100)
         final_amount = (total_amount + float(delivery_charge_res['delivery_charge'])) - delivery_charge_res['discount']
-        delivery_charge_res['final_amount'] = final_amount
+        delivery_charge_res['final_order_amount'] = final_amount
         return Response(delivery_charge_res)

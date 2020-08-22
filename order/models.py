@@ -45,6 +45,8 @@ class Order(DateTimeModel):
     checkout_token = models.CharField(max_length=36, blank=True, null=True)
     total_amount = models.DecimalField(decimal_places=2, max_digits=15)
     delivered_on = models.DateTimeField(editable=True, null=True, blank=True)
+    discount = models.IntegerField(default=0)
+    delivery_charge = models.IntegerField(default=0)
     updated_by = models.ForeignKey(User,
                                    on_delete=models.CASCADE,
                                    related_name='order_updated',

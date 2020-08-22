@@ -6,6 +6,7 @@ urlpatterns = [
         path('user/signup', views.UserRegistrationAPIView.as_view(), name='user-signup'),
         path('user/login', views.UserLoginAPIView.as_view(), name='user-login'),
         path('user/role/create', views.UserRoleCreateAPIView.as_view(), name='user-role-create'),
+        path('user/activate', views.UserActivationAPIView.as_view(), name='user-role-create'),
         path('address/list', views.AddressListAPIView.as_view(), name='address-list'),
         path('address/create', views.AddressCreateAPIView.as_view(), name='address-create'),
         path('address/<str:pk>/detail', views.AddressDetailAPIView.as_view(), name='address-detail'),
@@ -14,7 +15,7 @@ urlpatterns = [
 
         # path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         # views.activate, name='activate'),
-        path('activate/<str:uidb64>/<str:token>/$',views.activate, name='activate'),
+        path('activate/$',views.activate, name='activate'),
 
         #admin
         path('admin/address/list', admin_views.AddressListAPIView.as_view(), name='address-list'),

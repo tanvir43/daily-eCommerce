@@ -66,6 +66,8 @@ class OrderCreateAPIView(CreateAPIView):
         print("order data", order_data)
         address_id = order_data['address_id']
         payment_method = order_data['payment_method']
+        discount = order_data['discount']
+        delivery_charge = order_data['delivery_charge']
         if payment_method == "cash":
             payment = Payment.objects.create(
                 user=user,
@@ -85,7 +87,9 @@ class OrderCreateAPIView(CreateAPIView):
                 billing_address=address,
                 currency="BDT",
                 total_amount=order_data['total_amount'],
-                payment=payment
+                payment=payment,
+                discount=discount,
+                delivery_charge=delivery_charge
             )
         # serializer = self.serializer_class(data=order_data)
         # serializer.is_valid(raise_exception=True)
@@ -120,7 +124,11 @@ class OrderCreateAPIView(CreateAPIView):
                                 order.save()
                                 order_item.save()
                                 order_item.order.add(order)
-                return Response({"status": "order successfully placed"}, status=201)
+                response = {
+                    "id": order.id,
+                    "status": "order successfully placed"
+                }
+                return Response(response, status=201)
             else:
                 return Response({"error": "Please select an item"}, status=400)
 

@@ -7,8 +7,7 @@
 <body>
  {% autoescape off %}
    Hi {{ user.email }},
-   Please click on the link to confirm your registration,
-   http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+   Your activation code is {{verification_code}}
  {% endautoescape %}
 </body>
 </html>

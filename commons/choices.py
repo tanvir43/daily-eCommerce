@@ -1,24 +1,38 @@
 class OrderStatus:
     DRAFT = "draft"  # fully editable, not confirmed order created by staff users
+    PENDING = "pending"  # fully editable, not confirmed order created by consumers
     UNFULFILLED = "unfulfilled"  # order with no items marked as fulfilled
     PARTIALLY_FULFILLED = (
         "partially fulfilled"  # order with some items marked as fulfilled
     )
     FULFILLED = "fulfilled"  # order with all items marked as fulfilled
-    PLACED = "placed" # order placed
+    PLACED = "placed"  # order placed
     COMPLETED = "completed"  # order completed
-    CANCELED = "canceled"  # permanently canceled order
+    CANCELLED = "cancelled"  # permanently canceled order
+    ACCEPTED = "accepted"  # permanently canceled order
 
     CHOICES = [
         (DRAFT, "Draft"),
+        (ACCEPTED, "Accepted"),
+        (PENDING, "Pending"),
         (UNFULFILLED, "Unfulfilled"),
         (PARTIALLY_FULFILLED, "Partially fulfilled"),
         (FULFILLED, "Fulfilled"),
         (PLACED, "Placed"),
         (COMPLETED, "Completed"),
-        (CANCELED, "Canceled"),
+        (CANCELLED, "Cancelled"),
     ]
 
+class Divisions:
+    DHAKA = "Dhaka"  # fully editable, not confirmed order created by staff users
+    CHATTRAGRAM = "Chattragram"  # fully editable, not confirmed order created by consumers
+    KHULNA = "Khulna"  # order with no items marked as fulfilled
+
+    CHOICES = [
+        (DHAKA, "Dhaka"),
+        (CHATTRAGRAM, "Chattagram"),
+        (KHULNA, "Khulna"),
+    ]
 
 class FulfillmentStatus:
     FULFILLED = "fulfilled"  # group of products in an order marked as fulfilled

@@ -102,6 +102,12 @@ class User(AbstractUser):
     # the user anyways, we will also use the email for logging in because it is
     # the most common form of login credential at the time of writing.
     email = models.EmailField(db_index=True, unique=True)
+    verification_code = models.CharField(max_length=100,
+                                         null=True,
+                                         blank=True)
+    otp = models.CharField(max_length=100,
+                           null=True,
+                           blank=True)
 
     # When a user no longer wishes to use our platform, they may try to delete
     # their account. That's a problem for us because the data we collect is
@@ -110,7 +116,7 @@ class User(AbstractUser):
     # letting them delete it. That way they won't show up on the site anymore,
     # but we can still analyze the data.
     phone = PhoneNumberField(unique=True, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    approved = models.BooleanField(default=False)
 
     # The `is_staff` flag is expected by Django to determine who can and cannot
     # log into the Django admin site. For most users this flag will always be
@@ -134,6 +140,9 @@ class User(AbstractUser):
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
     # objects = UserManager()
+
+    # class Meta:
+    #     unique_together = [['email', 'verification_code']]
 
     def __str__(self):
         """
@@ -184,14 +193,17 @@ class User(AbstractUser):
 
 
 class Address(DateTimeModel):
-    user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='addresses', on_delete=models.CASCADE, blank=True)
+    name = models.CharField(max_length=256)
     company_name = models.CharField(max_length=256, blank=True, null=True)
-    address = models.TextField(max_length=300)
-    city = models.CharField(max_length=256)
+    address = models.TextField(max_length=256)
+    city = models.CharField(max_length=256, null=True, blank=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
-    country = CountryField(default="Bangladesh")
-    phone = PhoneNumberField(default="")
+    country = models.CharField(default="Bangladesh", max_length=256)
+    phone = PhoneNumberField(max_length=256)
+    area = models.CharField(max_length=256)
     deleted = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=True)
 
     # first_name = models.CharField(max_length=256, blank=True, null=True)
     # last_name = models.CharField(max_length=256, blank=True, null=True)
@@ -214,7 +226,9 @@ class Address(DateTimeModel):
     #     return "%s %s" % (self.first_name, self.last_name)
 
     def __str__(self):
-        return f"{self.city}, {self.pk}"
+        if self.is_default:
+            return f"Object: {self.pk}, User: {self.user.id}, {self.area}           >> Current Address"
+        return f"Object: {self.pk}, User: {self.user.id}, {self.area}"
 
     # def __eq__(self, other):
     #     if not isinstance(other, Address):

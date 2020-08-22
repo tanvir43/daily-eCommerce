@@ -28,9 +28,14 @@ class Category(DateTimeModel):
         "self", null=True, blank=True, related_name="sub_category", on_delete=models.CASCADE
     )
     background_image = models.ImageField(
-        upload_to="category-backgrounds", blank=True, null=True
+        upload_to="category-backgrounds"
     )
     background_image_alt = models.CharField(max_length=128, blank=True)
+    created_by = models.ForeignKey(User,
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
     objects = CategoryManager
     # tree = TreeManager()
 
@@ -57,6 +62,10 @@ class Category(DateTimeModel):
 class Unit(models.Model):
     name = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(max_length=30)
+    created_by = models.ForeignKey(User,
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -100,14 +109,19 @@ class Product(DateTimeModel):
     available = models.BooleanField(default=True)
     stock = models.PositiveIntegerField()
     # created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="product-images", blank=True, null=True)
+    image = models.FileField(upload_to="product-images")
     image_alt = models.CharField(max_length=128, blank=True, verbose_name="Image Alt")
     # updated_at = models.DateTimeField(auto_now=True, null=True)
     charge_taxes = models.BooleanField(default=True ,verbose_name='Charge Taxes')
-    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     count_sold = models.BigIntegerField(default=0, verbose_name='Count Sold')
     discount_price = models.FloatField(blank=True, null=True)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField()
+    created_by = models.ForeignKey(User,
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
     # weight = MeasurementField(
     #     measurement=Weight, unit_choices=WeightUnits.CHOICES, blank=True, null=True
     # )
@@ -145,7 +159,7 @@ class Product(DateTimeModel):
 
 class OrderItem(DateTimeModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order = models.ManyToManyField(Order)
+    order = models.ManyToManyField(Order, related_name='order_items')
     product = models.ForeignKey('Product', related_name="order_items", on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)

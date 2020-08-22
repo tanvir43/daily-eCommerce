@@ -1,3 +1,5 @@
+import base64
+
 from rest_framework import serializers
 from rest_framework.serializers import (
     ModelSerializer,
@@ -6,7 +8,8 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField
     )
 
-from .models import Category, Product, Unit
+from .models import Category, Product, Unit, OrderItem
+from order.models import Order
 
 
 class UnitSerializer(ModelSerializer):
@@ -108,7 +111,7 @@ class CategoryListSerializer(ModelSerializer):
     # sub_category = SerializerMethodField()
     # parent = PrimaryKeyRelatedField(queryset=Category.objects.filter(parent=None))
     sub_category = RecursiveSerializer(many=True, read_only=True)
-    products = ProductListSerializer(many=True)
+    # products = ProductListSerializer(many=True)
     # products = ProductTestSerializer(source='product.all', many=True)
 
     # def get_parent(self, instance):
@@ -127,7 +130,7 @@ class CategoryListSerializer(ModelSerializer):
             'background_image',
             'background_image_alt',
             'sub_category',
-            'products'
+            # 'products'
         )
 
     # def get_products(self, obj):
@@ -149,6 +152,7 @@ class CategoryListSerializer(ModelSerializer):
 
 class CategoryDetailSerializer(ModelSerializer):
     sub_category = SerializerMethodField()
+    parent = SerializerMethodField()
 
     class Meta:
         model = Category
@@ -159,7 +163,8 @@ class CategoryDetailSerializer(ModelSerializer):
             'description',
             'background_image',
             'background_image_alt',
-            'sub_category'
+            'sub_category',
+            'parent'
         ]
 
     def get_sub_category(self, obj):
@@ -167,10 +172,25 @@ class CategoryDetailSerializer(ModelSerializer):
             return CategoryChildSerializer(obj.sub_category, many=True).data
         return None
 
+    def get_parent(self, obj):
+        if obj.parent:
+            return obj.parent.name
+        else:
+            return None
+
 
 class ProductDetailSerializer(ModelSerializer):
     # category = SerializerMethodField()
     unit = SerializerMethodField()
+    image = SerializerMethodField()
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            photo_url = obj.image.url
+            # return photo_url
+            return request.build_absolute_uri(photo_url)
+        return None
 
     class Meta:
         model = Product
@@ -196,3 +216,41 @@ class ProductDetailSerializer(ModelSerializer):
         return obj.unit.name
     # def get_category(self, obj):
     #     return str(obj.category.name)
+
+
+class OrderItemSerializer(ModelSerializer):
+    product = SerializerMethodField()
+    price = SerializerMethodField()
+    unit = SerializerMethodField()
+    image = SerializerMethodField()
+    slug = SerializerMethodField()
+
+    def get_slug(self, obj):
+        return obj.product.slug
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.product.image:
+            photo_url = obj.product.image.url
+            return request.build_absolute_uri(photo_url)
+        return None
+
+    def get_unit(self, obj):
+        return obj.product.unit.name
+
+    def get_price(self, obj):
+        return obj.get_final_price()
+
+    def get_product(self, obj):
+        return obj.product.name
+
+    class Meta:
+        model = OrderItem
+        fields = (
+            'product',
+            'quantity',
+            'price',
+            'unit',
+            'slug',
+            'image'
+        )

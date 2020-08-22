@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ {% autoescape off %}
+   Hi {{ user.email }},
+   Your activation code is {{verification_code}}
+ {% endautoescape %}
+</body>
+</html>

@@ -124,11 +124,17 @@ class OrderCreateAPIView(CreateAPIView):
                                 order.save()
                                 order_item.save()
                                 order_item.order.add(order)
-                response = {
-                    "id": order.id,
-                    "status": "order successfully placed"
-                }
-                return Response(response, status=201)
+                if order:
+                    response = {
+                        "id": order.id,
+                        "status": "order successfully placed"
+                    }
+                    return Response(response, status=201)
+                else:
+                    response = {
+                        "error": "Order not created"
+                    }
+                    return Response(response, status=400)
             else:
                 return Response({"error": "Please select an item"}, status=400)
 

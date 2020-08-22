@@ -61,5 +61,7 @@ class OrderSerializer(ModelSerializer):
             "email",
             "order_items",
             "total_amount",
-            "payment"
+            "payment",
+            "discount",
+            "delivery_charge"
         )

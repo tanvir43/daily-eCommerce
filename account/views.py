@@ -93,7 +93,7 @@ class UserRegistrationAPIView(CreateAPIView):
         email.send()
         status_code = status.HTTP_201_CREATED
         response = {
-            'success': 'An activation link is sent to your email',
+            'success': 'A verification code is sent to your email',
         }
         return Response(response, status=status_code)
 

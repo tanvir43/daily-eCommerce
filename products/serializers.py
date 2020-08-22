@@ -173,7 +173,10 @@ class CategoryDetailSerializer(ModelSerializer):
         return None
 
     def get_parent(self, obj):
-        return obj.parent.name
+        if obj.parent:
+            return obj.parent.name
+        else:
+            return None
 
 
 class ProductDetailSerializer(ModelSerializer):

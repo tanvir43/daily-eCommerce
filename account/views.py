@@ -7,6 +7,8 @@ from django.core.mail import EmailMessage
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.http import HttpResponse
 
+from .utils import random_unique_digits
+
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -69,22 +71,21 @@ class UserRegistrationAPIView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
 
     def post(self, request, *args, **kwargs):
-        print("DATA SHAK", request.data)
         data = request.data
+        verification_code = random_unique_digits(5)
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        user = serializer.save(verification_code=verification_code)
         print(user)
         current_site = get_current_site(request)
         mail_subject = 'Activate your account.'
         message = render_to_string('account_active_email.html', {
             'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
+            'verification_code': verification_code,
+            # 'domain': current_site.domain,
+            # 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            # 'token': account_activation_token.make_token(user),
         })
-        print("Message", message)
-        print("user pk", user.pk)
         to_email = data.get('email')
         email = EmailMessage(
             mail_subject, message, to=[to_email]
@@ -123,6 +124,30 @@ class AddressListAPIView(ListAPIView):
         address = Address.objects.filter(user=user, deleted=False)
         serializer = self.serializer_class(address, many=True)
         return Response(serializer.data)
+
+
+class UserActivationAPIView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserLoginSerializer
+    permission_classes = (AllowAny,)
+
+    def patch(self, request, *args, **kwargs):
+        data = request.data
+        verification_code = data['verification_code']
+        email = data['email']
+        try:
+            user = User.objects.get(email=email)
+        except Exception:
+            return Response({"error": "User not found with this email"})
+        else:
+            if user.verification_code == verification_code:
+                user.approved = True
+                user.verification_code = None
+                user.save()
+                response = {
+                    "status": "Successfully activated"
+                }
+                return Response(response, status=status.HTTP_200_OK)
 
 
 class AddressCreateAPIView(CreateAPIView):

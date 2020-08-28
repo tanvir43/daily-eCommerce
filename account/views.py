@@ -46,13 +46,18 @@ class UserLoginAPIView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         print("serialized data", serializer.data)
-        if serializer.data['approved']:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
+        if not serializer.data['approved']:
             error = {
-                'error':  'Please activate your account'
+                'error': 'Please activate your account'
             }
             return Response(error, status=status.HTTP_200_OK)
+        elif serializer.data['is_staff']:
+            error = {
+                'error': 'You are not a valid user'
+            }
+            return Response(error, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.data, status=status.HTTP_200_OK)
     # def post(self, request):
     #     serializer = self.serializer_class(data=request.data)
     #     serializer.is_valid(raise_exception=True)
@@ -96,16 +101,6 @@ class UserRegistrationAPIView(CreateAPIView):
             'success': 'A verification code is sent to your email',
         }
         return Response(response, status=status_code)
-
-
-class UserRoleCreateAPIView(CreateAPIView):
-    queryset = Role.objects.all()
-    serializer_class = UserRoleSerializer
-
-
-class UserGroupCreateAPIView(CreateAPIView):
-    queryset = Group.objects.all()
-    serializer_class = UserGroupSerializer
 
 
 # class AddressListAPIView(ListAPIView):

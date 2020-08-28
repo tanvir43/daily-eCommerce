@@ -5,7 +5,7 @@ from account import views, admin_views
 urlpatterns = [
         path('user/signup', views.UserRegistrationAPIView.as_view(), name='user-signup'),
         path('user/login', views.UserLoginAPIView.as_view(), name='user-login'),
-        path('user/role/create', views.UserRoleCreateAPIView.as_view(), name='user-role-create'),
+
         path('user/activate', views.UserActivationAPIView.as_view(), name='user-role-create'),
         path('address/list', views.AddressListAPIView.as_view(), name='address-list'),
         path('address/create', views.AddressCreateAPIView.as_view(), name='address-create'),
@@ -18,6 +18,19 @@ urlpatterns = [
         # path('activate/$',views.activate, name='activate'),
 
         #admin
+
+        path('admin/user/list/<str:type>', admin_views.UserListAPIView.as_view(), name='staff-list'),
+        path('admin/user/create', admin_views.UserCreateAPIView.as_view(), name='staff-create'),
+        path('admin/user/login', admin_views.StaffLoginAPIView.as_view(), name='staff-login'),
+        path('admin/user/<str:pk>/detail', admin_views.UserDetailAPIView.as_view(), name='staff-detail'),
+        path('admin/user/<str:pk>/edit', admin_views.UserUpdateAPIView.as_view(), name='staff-update'),
+        # path('admin/user/<str:pk>/delete', admin_views.AddressDeleteAPIView.as_view(), name='staff-delete'),
+
+        path('admin/role/create', admin_views.StaffRoleCreateAPIView.as_view(), name='staff-role-create'),
+        path('admin/role/list', admin_views.StaffRoleListAPIView.as_view(), name='staff-role-list'),
+        path('admin/group/create', admin_views.StaffGroupCreateAPIView.as_view(), name='staff-group-create'),
+        path('admin/group/list', admin_views.StaffGroupListAPIView.as_view(), name='staff-group-list'),
+
         path('admin/address/list', admin_views.AddressListAPIView.as_view(), name='address-list'),
         path('admin/address/create', admin_views.AddressCreateAPIView.as_view(), name='address-create'),
         path('admin/address/<str:pk>/detail', admin_views.AddressDetailAPIView.as_view(), name='address-detail'),

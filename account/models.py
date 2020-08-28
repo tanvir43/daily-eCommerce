@@ -40,7 +40,7 @@ class Role(models.Model):
 
     def __str__(self):
         # return self.get_id_display()
-        return self.name
+        return f"{self.name}, {self.pk}"
 
 
 class UserManager(BaseUserManager):
@@ -129,6 +129,8 @@ class User(AbstractUser):
     # A timestamp reprensenting when this object was last updated.
     updated_at = models.DateTimeField(auto_now=True)
     terms = models.BooleanField(default=False)
+    profile_image = models.ImageField(null=True, blank=True)
+    created_by = models.EmailField(null=True, blank=True, max_length=256)
 
     # More fields required by Django when specifying a custom user model.
 

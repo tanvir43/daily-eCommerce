@@ -102,7 +102,7 @@ class StaffLoginAPIView(CreateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             error = {
-                'error':  'You are not a staff user'
+                'status':  'You are not a staff user'
             }
             return Response(error, status=status.HTTP_200_OK)
 
@@ -124,7 +124,7 @@ class UserDetailAPIView(RetrieveUpdateAPIView):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 error = {
-                    'error': 'You are not a staff user'
+                    'status': 'You are not a staff user'
                 }
                 return Response(error, status=status.HTTP_200_OK)
 
@@ -231,7 +231,7 @@ class StaffRoleListAPIView(ListAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             error = {
-                'error': 'You are not a staff user'
+                'status': 'You are not a staff user'
             }
             return Response(error, status=status.HTTP_200_OK)
 
@@ -266,7 +266,7 @@ class StaffGroupListAPIView(ListAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             error = {
-                'error': 'You are not a staff user'
+                'status': 'You are not a staff user'
             }
             return Response(error, status=status.HTTP_200_OK)
 

@@ -35,7 +35,7 @@ class Role(models.Model):
     )
 
     # id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     # user = models.ManyToManyField(User)
 
     def __str__(self):

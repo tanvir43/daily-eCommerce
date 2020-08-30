@@ -62,7 +62,7 @@ class UserCreateAPIView(CreateAPIView):
                 return Response(response, status=status.HTTP_200_OK)
 
         else:
-            return Response({"error": "You are not a staff user"}, status=status.HTTP_201_CREATED)
+            return Response({"status": "You are not a staff user"}, status=status.HTTP_200_OK)
 
 
 class UserListAPIView(ListAPIView):
@@ -81,10 +81,7 @@ class UserListAPIView(ListAPIView):
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            error = {
-                'error': 'You are not a staff user'
-            }
-            return Response(error, status=status.HTTP_200_OK)
+            return Response({'error': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class StaffLoginAPIView(CreateAPIView):
@@ -101,10 +98,7 @@ class StaffLoginAPIView(CreateAPIView):
         if serializer.data['is_staff']:
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            error = {
-                'status':  'You are not a staff user'
-            }
-            return Response(error, status=status.HTTP_200_OK)
+            return Response({'status':  'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class UserDetailAPIView(RetrieveUpdateAPIView):
@@ -123,10 +117,7 @@ class UserDetailAPIView(RetrieveUpdateAPIView):
                 serializer = self.serializer_class(data)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                error = {
-                    'status': 'You are not a staff user'
-                }
-                return Response(error, status=status.HTTP_200_OK)
+                return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class UserUpdateAPIView(RetrieveUpdateAPIView):
@@ -215,7 +206,7 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
                 #     return Response(response, status=status.HTTP_200_OK)
 
             else:
-                return Response({"error": "You are not a staff user"}, status=status.HTTP_201_CREATED)
+                return Response({"error": "You are not a staff user"}, status=status.HTTP_200_OK)
 
 
 class StaffRoleListAPIView(ListAPIView):
@@ -230,10 +221,7 @@ class StaffRoleListAPIView(ListAPIView):
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            error = {
-                'status': 'You are not a staff user'
-            }
-            return Response(error, status=status.HTTP_200_OK)
+            return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class StaffRoleCreateAPIView(CreateAPIView):
@@ -265,10 +253,7 @@ class StaffGroupListAPIView(ListAPIView):
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            error = {
-                'status': 'You are not a staff user'
-            }
-            return Response(error, status=status.HTTP_200_OK)
+            return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class StaffGroupCreateAPIView(CreateAPIView):
@@ -289,9 +274,39 @@ class StaffGroupCreateAPIView(CreateAPIView):
 
 
 class AddressListAPIView(ListAPIView):
-    queryset = Address.objects.filter(deleted=False)
+    queryset = Address.objects.filter()
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        # data = Address.objects.filter(deleted=False)
+        data = self.get_queryset()
+        if user.is_staff:
+            serializer = self.serializer_class(data, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
+
+
+class UserAddressListAPIView(ListAPIView):
+    # queryset = Address.objects.filter(deleted=False)
+    serializer_class = AddressSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk, *args, **kwargs):
+        fetched_by = request.user
+        try:
+            user = User.objects.get(id=pk)
+        except Exception:
+            return Response({"status": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            if fetched_by.is_staff:
+                addresses = Address.objects.filter(user=user)
+                serializer = self.serializer_class(addresses, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class AddressCreateAPIView(CreateAPIView):
@@ -299,26 +314,60 @@ class AddressCreateAPIView(CreateAPIView):
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
         data = request.data
-        user = request.user
-        serializer = self.serializer_class(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=user)
-        return Response({'status': 'Address saved successfully'}, status=status.HTTP_201_CREATED)
+        created_by = request.user
+        try:
+            user = User.objects.get(id=pk)
+        except Exception:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            if created_by.is_staff:
+                serializer = self.serializer_class(data=data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save(user=user, created_by=created_by)
+                return Response({'status': 'Address saved successfully'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class AddressDetailAPIView(RetrieveAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-    permission_classes = (AllowAny,)
-    # lookup_url_kwarg = "abc"
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk, *args, **kwargs):
+        fetched_by = request.user
+        try:
+            address = Address.objects.get(id=pk)
+        except Exception:
+            return Response({"status": "Address not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            if fetched_by.is_staff:
+                serializer = self.serializer_class(address)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 
 
 class AddressUpdateAPIView(RetrieveUpdateAPIView):
-    queryset = Address.objects.all()
+    # queryset = Address.objects.all()
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
+
+    def patch(self, request, pk, *args, **kwargs):
+        updated_by = request.user
+        data = request.data
+        try:
+            address = User.objects.get(id=pk)
+        except Exception:
+            return Response({"status": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            if updated_by.is_staff:
+                serializer = self.serializer_class(address, data=data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                serializer.save(updated_by=updated_by)
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AddressDeleteAPIView(RetrieveUpdateAPIView):

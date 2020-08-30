@@ -323,10 +323,21 @@ class AddressCreateAPIView(CreateAPIView):
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
             if created_by.is_staff:
+                if Address.objects.filter(user=user, is_default=True).exists():
+                    address = Address.objects.get(user=user, is_default=True)
+                    address.is_default = False
+                    address.save()
                 serializer = self.serializer_class(data=data)
                 serializer.is_valid(raise_exception=True)
                 serializer.save(user=user, created_by=created_by)
-                return Response({'status': 'Address saved successfully'}, status=status.HTTP_201_CREATED)
+                response = {
+                    "id": serializer.data['id'],
+                    "status": "Address saved successfully"
+                }
+                # serializer = self.serializer_class(data=data)
+                # serializer.is_valid(raise_exception=True)
+                # serializer.save(user=user, created_by=created_by)
+                return Response(response, status=status.HTTP_201_CREATED)
             else:
                 return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
 

@@ -153,8 +153,8 @@ class AddressCreateAPIView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         user = request.user
-        if Address.objects.filter(is_default=True).exists():
-            address = Address.objects.get(is_default=True)
+        if Address.objects.filter(user=user, is_default=True).exists():
+            address = Address.objects.get(user=user, is_default=True)
             address.is_default = False
             address.save()
         serializer = self.serializer_class(data=data)
@@ -188,6 +188,7 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def patch(self, request, pk, *args, **kwargs):
+        user = request.user
         try:
             current_address = Address.objects.get(id=pk)
         except Exception as e:
@@ -195,8 +196,8 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
         else:
             data = request.data
             if 'is_default' in data and data['is_default']:
-                if Address.objects.filter(is_default=True).exists():
-                    previous_address = Address.objects.get(is_default=True)
+                if Address.objects.filter(user=user, is_default=True).exists():
+                    previous_address = Address.objects.get(user=user, is_default=True)
                     previous_address.is_default = False
                     previous_address.save()
             serializer = self.serializer_class(current_address, data=data, partial=True)

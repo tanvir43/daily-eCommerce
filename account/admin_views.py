@@ -368,7 +368,6 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
 
     def patch(self, request, pk, *args, **kwargs):
         updated_by = request.user
-        data = request.data
         try:
             current_address = Address.objects.get(id=pk)
         except Exception as e:

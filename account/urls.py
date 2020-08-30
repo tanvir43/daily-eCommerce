@@ -32,7 +32,7 @@ urlpatterns = [
         path('admin/group/list', admin_views.StaffGroupListAPIView.as_view(), name='staff-group-list'),
 
         path('admin/address/list', admin_views.AddressListAPIView.as_view(), name='address-list'),
-        path('admin/address/create', admin_views.AddressCreateAPIView.as_view(), name='address-create'),
+        path('admin/address/<str:pk>/create', admin_views.AddressCreateAPIView.as_view(), name='address-create'),
         path('admin/address/<str:pk>/detail', admin_views.AddressDetailAPIView.as_view(), name='address-detail'),
         path('admin/address/<str:pk>/edit', admin_views.AddressUpdateAPIView.as_view(), name='address-update'),
         path('admin/address/<str:pk>/delete', admin_views.AddressDeleteAPIView.as_view(), name='address-delete'),

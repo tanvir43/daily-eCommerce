@@ -206,6 +206,7 @@ class Address(DateTimeModel):
     area = models.CharField(max_length=256)
     deleted = models.BooleanField(default=False)
     is_default = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 
     # first_name = models.CharField(max_length=256, blank=True, null=True)
     # last_name = models.CharField(max_length=256, blank=True, null=True)

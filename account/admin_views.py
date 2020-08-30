@@ -370,15 +370,39 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
         updated_by = request.user
         data = request.data
         try:
-            address = User.objects.get(id=pk)
-        except Exception:
-            return Response({"status": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            current_address = Address.objects.get(id=pk)
+        except Exception as e:
+            return Response({"error": "Address not found"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             if updated_by.is_staff:
-                serializer = self.serializer_class(address, data=data, partial=True)
+                data = request.data
+                user = current_address.user
+                if 'is_default' in data and data['is_default']:
+                    if Address.objects.filter(user=user, is_default=True).exists():
+                        previous_address = Address.objects.get(user=user, is_default=True)
+                        previous_address.is_default = False
+                        previous_address.save()
+                serializer = self.serializer_class(current_address, data=data, partial=True)
                 serializer.is_valid(raise_exception=True)
                 serializer.save(updated_by=updated_by)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                response = {
+                    "id": serializer.data['id'],
+                    "status": "Successfully updated"
+                }
+                return Response(response, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)
+
+        # try:
+        #     address = User.objects.get(id=pk)
+        # except Exception:
+        #     return Response({"status": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # else:
+        #     if updated_by.is_staff:
+        #         serializer = self.serializer_class(address, data=data, partial=True)
+        #         serializer.is_valid(raise_exception=True)
+        #         serializer.save(updated_by=updated_by)
+        #         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AddressDeleteAPIView(RetrieveUpdateAPIView):

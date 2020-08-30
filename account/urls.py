@@ -34,6 +34,7 @@ urlpatterns = [
         path('admin/address/list', admin_views.AddressListAPIView.as_view(), name='address-list'),
         path('admin/address/<str:pk>/create', admin_views.AddressCreateAPIView.as_view(), name='address-create'),
         path('admin/address/<str:pk>/detail', admin_views.AddressDetailAPIView.as_view(), name='address-detail'),
+        path('admin/address/<str:pk>/user/list', admin_views.UserAddressListAPIView.as_view(), name='user-address-list'),
         path('admin/address/<str:pk>/edit', admin_views.AddressUpdateAPIView.as_view(), name='address-update'),
         path('admin/address/<str:pk>/delete', admin_views.AddressDeleteAPIView.as_view(), name='address-delete'),
         # path('user/group/create', views.UserGroupCreateAPIView.as_view(), name='user-group-create'),

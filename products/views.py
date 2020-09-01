@@ -25,7 +25,7 @@ from products.serializers import (
     )
 from .pagination import (
     ProductLimitOffsetPagination,
-    ProductPageNumberPagination,
+    CustomPageNumberPagination,
     CustomPaginator
     )
 
@@ -85,7 +85,7 @@ class ProductListAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     permission_classes = (AllowAny,)
-    pagination_class = ProductPageNumberPagination #ProductListLimitOffsetPagination
+    pagination_class = CustomPageNumberPagination #ProductListLimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['price']
 
@@ -102,7 +102,7 @@ class ProductUnderCategoryListView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     permission_classes = (AllowAny,)
-    pagination_class = ProductPageNumberPagination #CustomPaginator
+    pagination_class = CustomPageNumberPagination #CustomPaginator
     # lookup_field = "slug"
 
     def get(self, request, slug):

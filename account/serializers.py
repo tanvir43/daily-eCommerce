@@ -272,11 +272,17 @@ class UserLoginSerializer(serializers.Serializer):
         #     return user
 
 class AddressSerializer(serializers.ModelSerializer):
+    email = SerializerMethodField()
+
+    def get_email(self, obj):
+        return obj.user.email
+
     class Meta:
         model = Address
         fields = (
             "id",
             "user",
+            "email",
             "name",
             "company_name",
             "address",

@@ -21,7 +21,7 @@ class ProductLimitOffsetPagination(LimitOffsetPagination):
 
 
 class CustomPageNumberPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 10
     page_size_query_param = 'page_size'
 
     def paginate_queryset(self, queryset, request, view=None):

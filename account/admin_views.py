@@ -26,6 +26,8 @@ from account.serializers import (
     AddressSerializer
     )
 
+from products.pagination import CustomPageNumberPagination
+
 
 class UserCreateAPIView(CreateAPIView):
     queryset = User.objects.all()
@@ -78,6 +80,10 @@ class UserListAPIView(ListAPIView):
         elif type == 'staff':
             data = User.objects.filter(is_staff=True)
         if user.is_staff:
+            page = self.paginate_queryset(data)
+            if page is not None:
+                serializer = self.serializer_class(page, many=True)
+                return self.get_paginated_response(serializer.data)
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -218,6 +224,10 @@ class StaffRoleListAPIView(ListAPIView):
         user = request.user
         data = Role.objects.all()
         if user.is_staff:
+            page = self.paginate_queryset(data)
+            if page is not None:
+                serializer = self.serializer_class(page, many=True)
+                return self.get_paginated_response(serializer.data)
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -250,6 +260,10 @@ class StaffGroupListAPIView(ListAPIView):
         user = request.user
         data = Group.objects.all()
         if user.is_staff:
+            page = self.paginate_queryset(data)
+            if page is not None:
+                serializer = self.serializer_class(page, many=True)
+                return self.get_paginated_response(serializer.data)
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -283,6 +297,10 @@ class AddressListAPIView(ListAPIView):
         # data = Address.objects.filter(deleted=False)
         data = self.get_queryset()
         if user.is_staff:
+            page = self.paginate_queryset(data)
+            if page is not None:
+                serializer = self.serializer_class(page, many=True)
+                return self.get_paginated_response(serializer.data)
             serializer = self.serializer_class(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -293,6 +311,7 @@ class UserAddressListAPIView(ListAPIView):
     # queryset = Address.objects.filter(deleted=False)
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPageNumberPagination
 
     def get(self, request, pk, *args, **kwargs):
         fetched_by = request.user
@@ -303,6 +322,10 @@ class UserAddressListAPIView(ListAPIView):
         else:
             if fetched_by.is_staff:
                 addresses = Address.objects.filter(user=user)
+                page = self.paginate_queryset(addresses)
+                if page is not None:
+                    serializer = self.serializer_class(page, many=True)
+                    return self.get_paginated_response(serializer.data)
                 serializer = self.serializer_class(addresses, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:

@@ -14,6 +14,12 @@ JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 from .models import Address, Role, User
 
 
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
 class UserRoleSerializer(serializers.ModelSerializer):
     id = serializers.CharField(read_only=True)
 
@@ -115,7 +121,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'token',
-            'terms'
+            'terms',
+            'is_staff',
+            'approved',
+            'is_superuser',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
         )
 
     def validate_password(self, value: str) -> str:
@@ -170,6 +183,8 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
     approved = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
+    is_superuser = serializers.BooleanField(read_only=True)
 
     def create(self, data):
         # The `validate` method is where we make sure that the current
@@ -229,7 +244,9 @@ class UserLoginSerializer(serializers.Serializer):
             # 'username': user.username,
             'email': user.email,
             'token': user.token,
-            'approved': user.approved
+            'approved': user.approved,
+            'is_staff': user.is_staff,
+            'is_superuser': user.is_superuser
         }
 
 
@@ -255,11 +272,17 @@ class UserLoginSerializer(serializers.Serializer):
         #     return user
 
 class AddressSerializer(serializers.ModelSerializer):
+    email = SerializerMethodField()
+
+    def get_email(self, obj):
+        return obj.user.email
+
     class Meta:
         model = Address
         fields = (
             "id",
             "user",
+            "email",
             "name",
             "company_name",
             "address",

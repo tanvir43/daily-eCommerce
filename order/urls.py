@@ -1,6 +1,6 @@
 from django.urls import path
 
-from order import views
+from order import views, admin_views
 
 urlpatterns = [
         path('order/list', views.OrderListAPIView.as_view(), name='order-list'),
@@ -11,4 +11,10 @@ urlpatterns = [
         # path('order/<int:pk>/detail', views.OrderDetailAPIView.as_view(), name='order-detail'),
         # path('order/<int:pk>/edit', views.OrderUpdateAPIView.as_view(), name='order-update'),
         # path('order/<int:pk>/delete', views.OrderDeleteAPIView.as_view(), name='order-delete'),
+
+
+        path('admin/order/list', admin_views.AllOrderListAPIView.as_view(), name='all-order-list'),
+        path('admin/order/<str:pk>/user/list', admin_views.UserOrderListAPIView.as_view(), name='user-order-list'),
+
+
     ]

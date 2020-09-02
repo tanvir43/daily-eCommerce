@@ -35,12 +35,12 @@ class Role(models.Model):
     )
 
     # id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     # user = models.ManyToManyField(User)
 
     def __str__(self):
         # return self.get_id_display()
-        return self.name
+        return f"{self.name}, {self.pk}"
 
 
 class UserManager(BaseUserManager):
@@ -129,6 +129,8 @@ class User(AbstractUser):
     # A timestamp reprensenting when this object was last updated.
     updated_at = models.DateTimeField(auto_now=True)
     terms = models.BooleanField(default=False)
+    profile_image = models.ImageField(null=True, blank=True)
+    created_by = models.EmailField(null=True, blank=True, max_length=256)
 
     # More fields required by Django when specifying a custom user model.
 
@@ -204,6 +206,7 @@ class Address(DateTimeModel):
     area = models.CharField(max_length=256)
     deleted = models.BooleanField(default=False)
     is_default = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 
     # first_name = models.CharField(max_length=256, blank=True, null=True)
     # last_name = models.CharField(max_length=256, blank=True, null=True)

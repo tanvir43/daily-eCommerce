@@ -46,13 +46,18 @@ class UserLoginAPIView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         print("serialized data", serializer.data)
-        if serializer.data['approved']:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
+        if not serializer.data['approved']:
             error = {
-                'error':  'Please activate your account'
+                'error': 'Please activate your account'
             }
             return Response(error, status=status.HTTP_200_OK)
+        elif serializer.data['is_staff']:
+            error = {
+                'error': 'You are not a valid user'
+            }
+            return Response(error, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.data, status=status.HTTP_200_OK)
     # def post(self, request):
     #     serializer = self.serializer_class(data=request.data)
     #     serializer.is_valid(raise_exception=True)
@@ -96,16 +101,6 @@ class UserRegistrationAPIView(CreateAPIView):
             'success': 'A verification code is sent to your email',
         }
         return Response(response, status=status_code)
-
-
-class UserRoleCreateAPIView(CreateAPIView):
-    queryset = Role.objects.all()
-    serializer_class = UserRoleSerializer
-
-
-class UserGroupCreateAPIView(CreateAPIView):
-    queryset = Group.objects.all()
-    serializer_class = UserGroupSerializer
 
 
 # class AddressListAPIView(ListAPIView):
@@ -158,8 +153,8 @@ class AddressCreateAPIView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         user = request.user
-        if Address.objects.filter(is_default=True).exists():
-            address = Address.objects.get(is_default=True)
+        if Address.objects.filter(user=user, is_default=True).exists():
+            address = Address.objects.get(user=user, is_default=True)
             address.is_default = False
             address.save()
         serializer = self.serializer_class(data=data)
@@ -193,6 +188,7 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def patch(self, request, pk, *args, **kwargs):
+        user = request.user
         try:
             current_address = Address.objects.get(id=pk)
         except Exception as e:
@@ -200,8 +196,8 @@ class AddressUpdateAPIView(RetrieveUpdateAPIView):
         else:
             data = request.data
             if 'is_default' in data and data['is_default']:
-                if Address.objects.filter(is_default=True).exists():
-                    previous_address = Address.objects.get(is_default=True)
+                if Address.objects.filter(user=user, is_default=True).exists():
+                    previous_address = Address.objects.get(user=user, is_default=True)
                     previous_address.is_default = False
                     previous_address.save()
             serializer = self.serializer_class(current_address, data=data, partial=True)

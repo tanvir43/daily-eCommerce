@@ -198,7 +198,7 @@ ELASTICSEARCH_DSL = {
 
 # Name of the Elasticsearch index
 ELASTICSEARCH_INDEX_NAMES = {
-    'products.documents.book': 'product'
+    'products.documents.product': config('ES_INDEX_PRODUCT')
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

@@ -311,7 +311,7 @@ class UserAddressListAPIView(ListAPIView):
     # queryset = Address.objects.filter(deleted=False)
     serializer_class = AddressSerializer
     permission_classes = (IsAuthenticated,)
-    pagination_class = CustomPageNumberPagination
+    # pagination_class = CustomPageNumberPagination
 
     def get(self, request, pk, *args, **kwargs):
         fetched_by = request.user
@@ -322,10 +322,10 @@ class UserAddressListAPIView(ListAPIView):
         else:
             if fetched_by.is_staff:
                 addresses = Address.objects.filter(user=user)
-                page = self.paginate_queryset(addresses)
-                if page is not None:
-                    serializer = self.serializer_class(page, many=True)
-                    return self.get_paginated_response(serializer.data)
+                # page = self.paginate_queryset(addresses)
+                # if page is not None:
+                #     serializer = self.serializer_class(page, many=True)
+                #     return self.get_paginated_response(serializer.data)
                 serializer = self.serializer_class(addresses, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:

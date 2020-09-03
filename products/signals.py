@@ -41,14 +41,14 @@ def delete_document(sender, **kwargs):
     instance = kwargs['instance']
 
     if app_label == 'products':
-        # If it is `product.Category` that is being updated.
+        # If it is `product.Category` that is being deleted.
         if model_name == 'category':
             instances = instance.product.all()
             for _instance in instances:
                 registry.update(_instance)
                 # registry.delete(_instance, raise_on_error=False)
 
-        # If it is `product.Unit` that is being updated.
+        # If it is `product.Unit` that is being deleted.
         if model_name == 'unit':
             instances = instance.product.all()
             for _instance in instances:

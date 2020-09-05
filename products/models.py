@@ -138,6 +138,24 @@ class Product(DateTimeModel):
     def __str__(self):
         return self.name
 
+    @property
+    def category_indexing(self):
+        """Category for indexing.
+
+        Used in Elasticsearch indexing.
+        """
+        if self.category is not None:
+            return self.category.name
+
+    @property
+    def unit_indexing(self):
+        """Unit for indexing
+
+        Used for Elasticsearch indexing
+        """
+        if self.unit is not None:
+            return self.unit.name
+
 
 class OrderItem(DateTimeModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

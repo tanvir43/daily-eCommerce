@@ -33,7 +33,8 @@ ALLOWED_HOSTS = ['139.59.41.129',
                  'localhost',
                  'http://127.0.0.1:3000',
                  'www.saddho.com',
-                 'saddho.com']
+                 'saddho.com',
+                 '127.0.0.1 ']
 
 
 # Application definition
@@ -61,6 +62,12 @@ INSTALLED_APPS = [
     'products',
     'inventory',
     'order',
+
+    # Django Elasticsearch integration
+    'django_elasticsearch_dsl',
+
+    # Django REST framework Elasticsearch integration (this package)
+    'django_elasticsearch_dsl_drf',
 
     # 'graphene_django',
 ]
@@ -179,8 +186,21 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'PAGE_SIZE': 1
 
+}
+
+# Elasticsearch configuration
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
+
+# Name of the Elasticsearch index
+ELASTICSEARCH_INDEX_NAMES = {
+    'products.documents.product': config('ES_INDEX_PRODUCT')
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

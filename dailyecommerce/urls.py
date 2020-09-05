@@ -34,6 +34,15 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from products import search_urls as search_index_urls
+
+urlpatterns = [
+    # ...
+    # Search URLs
+    url(r'^search/', include(search_index_urls)),
+    # ...
+]
+
 schema_view = get_schema_view(
    openapi.Info(
       title="DailyEcommerceAPI",
@@ -49,8 +58,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     # path('api-documentation', schema_view),
-    path('admin/', admin.site.urls),
     # re_path('api/(?P<version>(v1|v2))/',include('products.urls')),
+    path('admin/', admin.site.urls),
+    path('search/', include(search_index_urls)),
     path('api/', include('products.urls')),
     path('api/', include('account.urls')),
     path('api/', include('order.urls')),

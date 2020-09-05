@@ -33,7 +33,8 @@ ALLOWED_HOSTS = ['139.59.41.129',
                  'localhost',
                  'http://127.0.0.1:3000',
                  'www.saddho.com',
-                 'saddho.com']
+                 'saddho.com',
+                 '127.0.0.1 ']
 
 
 # Application definition
@@ -185,7 +186,8 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'PAGE_SIZE': 1
 
 }
 

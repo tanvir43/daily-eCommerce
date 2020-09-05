@@ -8,6 +8,13 @@ from rest_framework.pagination import (
 from rest_framework.exceptions import APIException
 from rest_framework import status
 
+from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
+
+
+class SearchPageNumberPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+
 
 class NotFound(APIException):
     status_code = status.HTTP_200_OK
@@ -22,7 +29,7 @@ class ProductLimitOffsetPagination(LimitOffsetPagination):
 
 class CustomPageNumberPagination(PageNumberPagination):
     page_size = 10
-    page_size_query_param = 'page_size'
+    page_size_query_param = 'limit'
 
     def paginate_queryset(self, queryset, request, view=None):
         """

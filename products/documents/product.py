@@ -128,6 +128,7 @@ class ProductDocument(Document):
     count_sold = fields.IntegerField()
     discount_price = fields.IntegerField()
     quantity = fields.IntegerField()
+    image = fields.FileField()
 
     class Django(object):
         """Inner nested class Django."""

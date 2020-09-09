@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .viewsets.product_viewset import ProductDocumentView
 
 router = DefaultRouter()
-books = router.register(r'products',
+products = router.register(r'products',
                         ProductDocumentView,
                         basename='productdocument')
 

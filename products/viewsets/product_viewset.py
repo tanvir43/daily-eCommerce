@@ -25,6 +25,23 @@ from products.pagination import CustomPageNumberPagination, SearchPageNumberPagi
 
 from ..documents.product import ProductDocument
 from ..search_serializers.product import ProductDocumentSerializer
+from json import JSONEncoder
+from rest_framework.renderers import JSONRenderer
+
+
+class JSONSearchEncoder(JSONEncoder):
+    def default(self, obj):
+        from elasticsearch_dsl.response import Hit
+        if isinstance(obj, Hit):
+            return obj.to_dict()
+        return super().default(obj)
+
+
+class JSONSearchRenderer(JSONRenderer):
+    encoder_class = JSONSearchEncoder
+#
+# class GeneralSearchAPIView(APIView):
+#     renderer_classes = (JSONSearchRenderer,)
 
 
 class ProductDocumentView(DocumentViewSet):
@@ -32,6 +49,7 @@ class ProductDocumentView(DocumentViewSet):
 
     document = ProductDocument
     serializer_class = ProductDocumentSerializer
+    # renderer_classes = (JSONSearchRenderer,)
     pagination_class = SearchPageNumberPagination #LimitOffsetPagination # #PageNumberPagination #CustomPageNumberPagination #
     lookup_field = 'id'
     filter_backends = [

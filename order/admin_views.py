@@ -138,7 +138,7 @@ class UserOrderListAPIView(ListAPIView):
     #     return self.paginator.get_paginated_response(data)
 
 
-class OrderCreateAPIView(CreateAPIView):
+class UserOrderCreateAPIView(CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
@@ -229,3 +229,23 @@ class OrderCreateAPIView(CreateAPIView):
                             return Response(response, status=400)
                     else:
                         return Response({"error": "Please select an item"}, status=400)
+
+
+class UserOrderDetailAPIView(RetrieveAPIView):
+    queryset = Address.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk, *args, **kwargs):
+        fetched_by = request.user
+        try:
+            order = Order.objects.get(id=pk)
+        except Exception as e:
+            return Response({"error": "Order not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            if fetched_by.is_staff:
+                context = {'request': request}
+                serializer = self.serializer_class(order, context=context)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'You are not a staff user'}, status=status.HTTP_200_OK)

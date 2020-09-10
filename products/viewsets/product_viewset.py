@@ -21,7 +21,8 @@ from django_elasticsearch_dsl_drf.filter_backends import (
 )
 from django_elasticsearch_dsl_drf.viewsets import BaseDocumentViewSet, DocumentViewSet
 from django_elasticsearch_dsl_drf.pagination import PageNumberPagination, LimitOffsetPagination
-from products.pagination import CustomPageNumberPagination, SearchPageNumberPagination
+from products.search_pagination import SearchPageNumberPagination
+# SearchPageNumberPagination
 
 from ..documents.product import ProductDocument
 from ..search_serializers.product import ProductDocumentSerializer

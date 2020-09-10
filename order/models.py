@@ -58,7 +58,7 @@ class Order(DateTimeModel):
                                    blank=True)
 
     def __str__(self):
-        return self.status
+        return f"Status: {self.status}, ID: {self.pk}"
 
     def get_total(self):
         total = 0

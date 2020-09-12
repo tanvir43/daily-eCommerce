@@ -15,6 +15,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from products.models import Category, Product, Unit
 from products.serializers import (
+    SearchProductSerializer,
     ProductListSerializer,
     ProductDetailSerializer,
     CategorySerializer,
@@ -23,6 +24,7 @@ from products.serializers import (
     CategoryDetailSerializer,
     UnitSerializer
     )
+from .search import search
 from .pagination import (
     ProductLimitOffsetPagination,
     CustomPageNumberPagination,
@@ -64,6 +66,18 @@ class CategoryDeleteAPIView(DestroyAPIView):
     serializer_class = CategoryDetailSerializer
     lookup_field = "slug"
     permission_classes = (IsAuthenticated,)
+
+
+# product search view
+class SearchProductAPIView(ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = SearchProductSerializer
+
+    def get_queryset(self):
+        q = self.request.query_params.get('q')
+        if q is not None:
+            return search(q)
+        return super().get_queryset()
 
 
 class ProductCreateAPIView(CreateAPIView):

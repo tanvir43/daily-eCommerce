@@ -28,7 +28,7 @@ class ProductDocumentSerializer(DocumentSerializer):
 
         # Specify the correspondent document class
         document = ProductDocument
-        # Specify the 
+        # Specify the
         fields = (
             'name',
             'slug',

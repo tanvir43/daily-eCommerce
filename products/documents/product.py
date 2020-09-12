@@ -1,12 +1,13 @@
 from django.conf import settings
 from django_elasticsearch_dsl import Document, Index, fields
-from elasticsearch_dsl import analyzer
+from elasticsearch_dsl import analyzer, tokenizer, field
 
 from elasticsearch_dsl.analysis import (
     CustomAnalyzer,
     CustomTokenizer,
     CustomTokenFilter,
     CustomCharFilter,
+    token_filter,
 )
 
 from ..models import Product
@@ -25,6 +26,20 @@ custom_tokenizer = CustomTokenizer._type_shortcut
 custom_token_filter = CustomTokenFilter._type_shortcut
 custom_char_filter = CustomCharFilter._type_shortcut
 
+edge_ngram_completion_filter = token_filter(
+    'edge_ngram_completion_filter',
+    type="edge_ngram",
+    min_gram=1,
+    max_gram=20
+)
+
+
+edge_ngram_completion = analyzer(
+    "edge_ngram_completion",
+    tokenizer="standard",
+    filter=["lowercase", edge_ngram_completion_filter]
+)
+
 #Custom analyzer
 html_strip = analyzer(
     'html_strip',
@@ -32,6 +47,11 @@ html_strip = analyzer(
     filter=["lowercase", "stop", "snowball"],
     char_filter=["html_strip"]
 )
+    # html_strip = analyzer(
+    #     'html_strips',
+    #     tokenizer=tokenizer('trigram', 'edge_ngram', min_gram=3, max_gram=10),
+    #     filter=['lowercase', 'word_delimiter']
+    # )
 
 html_strip_lowercase = custom_analyzer(
     'html_strip',
@@ -46,28 +66,34 @@ class ProductDocument(Document):
     Product Elasticsearch document
     """
     id = fields.IntegerField(attr='id')
+    # name = fields.TextField(
+    #     # analyzer=html_strip,
+    #     # attr='name',
+    #     fields={
+    #         'suggest': fields.CompletionField(),
+    #         'lower': fields.TextField(analyzer=html_strip),
+    #     }
+    # )
     name = fields.KeywordField(
         # analyzer=html_strip,
         attr='name',
         fields={
             'suggest': fields.CompletionField(),
-            # 'lower': fields.KeywordField(analyzer=html_strip_lowercase),
+            'lower': fields.TextField(analyzer=html_strip_lowercase),
         }
     )
-    # name = fields.KeywordField(
-    #     analyzer=html_strip,
-    #     attr='name',
-    #     fields={
-    #         'suggest': fields.CompletionField(),
-    #         'lower': (analyzer=html_strip_lowercase),
-    #     }
-    # )
     # name = fields.TextField(
-    #     attr='name',
+    #     analyzer=html_strip,
+    #     fielddata=True,
     #     fields={
-    #         'suggest': fields.Completion(),
+    #         'raw': fields.KeywordField(),
+    #         'suggest': fields.CompletionField(),
+    #         'edge_ngram_completion': fields.TextField(
+    #             analyzer=edge_ngram_completion
+    #         ),
     #     }
     # )
+
     # name = fields.TextField(
     #     analyzer=html_strip,
     #     fields={

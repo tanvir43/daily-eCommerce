@@ -70,6 +70,28 @@ class CategoryChildSerializer(ModelSerializer):
         ]
 
 
+class SearchProductSerializer(ModelSerializer):
+    image = SerializerMethodField()
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            photo_url = obj.image.url
+            # return photo_url
+            return request.build_absolute_uri(photo_url)
+        return None
+
+    class Meta:
+        model = Product
+        fields = (
+            'name',
+            'slug',
+            'description',
+            'stock',
+            'count_sold',
+            'image'
+        )
+
 class ProductListSerializer(ModelSerializer):
     # category = SerializerMethodField()
     # category = CategorySerializer()

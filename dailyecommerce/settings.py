@@ -64,10 +64,10 @@ INSTALLED_APPS = [
     'order',
 
     # Django Elasticsearch integration
-    'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl',
 
     # Django REST framework Elasticsearch integration (this package)
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl_drf',
 
     # 'graphene_django',
 ]
@@ -198,9 +198,13 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+ES_HOST = config('ELASTIC_SEARCH_HOST'),
+ES_PORT = config('ELASTIC_SEARCH_PORT')
+
 # Name of the Elasticsearch index
 ELASTICSEARCH_INDEX_NAMES = {
-    'products.documents.product': config('ES_INDEX_PRODUCT')
+    # 'products.documents.product': config('ES_INDEX_PRODUCT'),
+    'products.documents': config('ES_INDEX_PRODUCTS')
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

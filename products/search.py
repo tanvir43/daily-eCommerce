@@ -1,7 +1,7 @@
 #products/search.py
 
 from elasticsearch_dsl.query import Q, MultiMatch, SF
-from .documents.product import ProductDocument
+from .documents.product import ProductDoc
 
 
 def get_search_query(phrase):

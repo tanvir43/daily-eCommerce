@@ -1,7 +1,10 @@
 from django.db import models
+from django.conf import settings
+from django.db.models.signals import post_save, pre_delete
 
 from account.models import User, Address
 from order.models import Order
+from products.documents.product import ProductDoc
 
 from commons.abstract import DateTimeModel
 
@@ -138,23 +141,35 @@ class Product(DateTimeModel):
     def __str__(self):
         return self.name
 
-    @property
-    def category_indexing(self):
-        """Category for indexing.
+    # @property
+    # def category_indexing(self):
+    #     """Category for indexing.
+    #
+    #     Used in Elasticsearch indexing.
+    #     """
+    #     if self.category is not None:
+    #         return self.category.name
+    #
+    # @property
+    # def unit_indexing(self):
+    #     """Unit for indexing
+    #
+    #     Used for Elasticsearch indexing
+    #     """
+    #     if self.unit is not None:
+    #         return self.unit.name
 
-        Used in Elasticsearch indexing.
-        """
-        if self.category is not None:
-            return self.category.name
-
-    @property
-    def unit_indexing(self):
-        """Unit for indexing
-
-        Used for Elasticsearch indexing
-        """
-        if self.unit is not None:
-            return self.unit.name
+    # @property
+    def indexing(self):
+        # ProductDoc.init(index=settings.ELASTICSEARCH_INDEX_NAMES['products.documents']  )
+        doc = ProductDoc(
+            meta={'id': self.pk},
+            name=self.name,
+            id=self.pk
+        )
+        # return doc
+        doc.save()
+        return doc.to_dict(include_meta=True)
 
 
 class OrderItem(DateTimeModel):
@@ -180,3 +195,15 @@ class OrderItem(DateTimeModel):
         if self.product.discount_price:
             return self.get_total_discount_price()
         return self.get_total_item_price()
+
+
+# def update_search(instance, **kwargs):
+#     instance.product_indexing().save()
+#
+#
+# def remove_from_search(instance, **kwargs):
+#     instance.product_indexing().delete()
+#
+#
+# post_save.connect(update_search, sender=Product)
+# pre_delete.connect(remove_from_search, sender=Product)

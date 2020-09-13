@@ -24,6 +24,7 @@ from products.serializers import (
     CategoryDetailSerializer,
     UnitSerializer
     )
+from products.documents.product import ProductDoc
 from .search import search
 from .pagination import (
     ProductLimitOffsetPagination,
@@ -69,7 +70,7 @@ class CategoryDeleteAPIView(DestroyAPIView):
 
 
 # product search view
-class SearchProductAPIView(ListAPIView):
+class SearchProductsAPIView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = SearchProductSerializer
 
@@ -78,6 +79,44 @@ class SearchProductAPIView(ListAPIView):
         if q is not None:
             return search(q)
         return super().get_queryset()
+
+
+# Another product search view
+class SearchProductAPIView(ListAPIView):
+    pagination_class = CustomPageNumberPagination
+    serializer_class = SearchProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        query = request.query_params.get('q')
+        context = {'request': request}
+        ids = []
+        if query:
+            try:
+                s = ProductDoc.search()
+                s = s.query('wildcard', name=query)
+                response = s.execute()
+                response_dict = response.to_dict()
+                hits = response_dict['hits']['hits']
+                ids = [hit['_source']['id'] for hit in hits]
+                queryset = Product.objects.filter(id__in=ids)
+                product_list = list(queryset)
+                product_list.sort(key=lambda product: ids.index(product.id))
+
+                page = self.paginate_queryset(queryset)
+                if page is not None:
+                    serializer = self.serializer_class(page, many=True, context=context)
+                    return self.get_paginated_response(serializer.data)
+                serializer = SearchProductSerializer(queryset, many=True, context=context)
+                # serializer = SearchProductSerializer(product_list, many=True, context=context)
+            except Exception as e:
+                print("eee", e)
+                products = Product.objects.filter(name__icontains=query)
+                page = self.paginate_queryset(products)
+                if page is not None:
+                    serializer = self.serializer_class(page, many=True, context=context)
+                    return self.get_paginated_response(serializer.data)
+                serializer = SearchProductSerializer(products, many=True, context=context)
+            return Response(serializer.data)
 
 
 class ProductCreateAPIView(CreateAPIView):

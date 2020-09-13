@@ -1,6 +1,25 @@
-# from django.db.models.signals import pre_save, post_save, post_delete
-# from django.dispatch import receiver
-# from django.apps import registry
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from .models import Product
+from products.documents.product import ProductDoc
+
+
+@receiver(post_save, sender=Product)
+def my_handler(sender, instance, **kwargs):
+    instance.indexing()
+
+
+
+
+
+
+
+
+
+
+
+
 #
 # @receiver(post_save)
 # def update_document(sender, **kwargs):

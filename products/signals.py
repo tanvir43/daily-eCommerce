@@ -7,7 +7,7 @@ from products.documents.product import ProductDoc
 
 @receiver(post_save, sender=Product)
 def my_handler(sender, instance, **kwargs):
-    instance.indexing()
+    instance.product_indexing()
 
 
 

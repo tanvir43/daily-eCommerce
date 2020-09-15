@@ -160,7 +160,7 @@ class Product(DateTimeModel):
     #         return self.unit.name
 
     # @property
-    def indexing(self):
+    def product_indexing(self):
         # ProductDoc.init(index=settings.ELASTICSEARCH_INDEX_NAMES['products.documents']  )
         doc = ProductDoc(
             meta={'id': self.pk},

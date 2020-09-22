@@ -144,11 +144,12 @@ class UserOrderCreateAPIView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     # permission_classes = (AllowAny,)
 
-    def post(self, request, pk, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         data = request.data
         created_by = request.user
         order_data = data['order']
-        order_data['user'] = request.user.id
+        pk = data['user']
+        # order_data['user'] =
         print("order data", order_data)
         address_id = order_data['address_id']
         payment_method = order_data['payment_method']
@@ -159,7 +160,7 @@ class UserOrderCreateAPIView(CreateAPIView):
         except Exception:
             return Response({'status': 'User not found'}, status=status.HTTP_200_OK)
         else:
-            if created_by.is_staff():
+            if created_by.is_staff:
                 if payment_method == "cash":
                     payment = Payment.objects.create(
                         user=user,
@@ -181,7 +182,8 @@ class UserOrderCreateAPIView(CreateAPIView):
                         total_amount=order_data['total_amount'],
                         payment=payment,
                         discount=discount,
-                        delivery_charge=delivery_charge
+                        delivery_charge=delivery_charge,
+                        created_by=created_by
                     )
                 # serializer = self.serializer_class(data=order_data)
                 # serializer.is_valid(raise_exception=True)
